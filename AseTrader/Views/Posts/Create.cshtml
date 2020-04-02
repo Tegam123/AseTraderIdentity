@@ -3,27 +3,27 @@
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
 
+@*@model AseTrader.Models.ViewModels.PostsViewModel*@
 
 @{
     ViewData["Title"] = "Create";
 }
 
-<h2>Add review</h2>
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>This is the place were everyone get's rich.</p>
+</div>
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div class="form-group">
-                @*<label asp-for="Comment" class="control-label"></label>*@
-                <textarea asp-for="Comment" rows="10" cols="80" style="width:100%;" placeholder="Please enter your review, thank you."></textarea>
-                <span asp-validation-for="Comment" class="text-danger"></span>
-                @*<span asp-validation-for="@User.Identity.Name" class="text-danger"></span>*@
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Add review" class="button" />&nbsp;<a asp-action="Index" class="button">Cancel</a>
-            </div>
-        </form>
-    </div>
+<div class="text-center" align="center">
+    <form asp-action="Create">
+        <div class="form-group" align="center">
+            <textarea asp-for="Comment" rows="10" cols="20" style="width:80%;" placeholder="Please enter your post, thank you."></textarea>
+            <span asp-validation-for="Comment" class="text-danger"></span>
+        </div>
+        <div class="form-group" align="center">
+            <input type="submit" value="Post" class="button" />&nbsp;<a asp-action="Index" class="button">Cancel</a>
+        </div>
+    </form>
 </div>
 
 @section Scripts {

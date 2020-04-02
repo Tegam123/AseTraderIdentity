@@ -42,7 +42,7 @@ namespace AseTrader.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Comment")] Post post, [FromServices]UserManager<User> userManager)
+        public async Task<IActionResult> Create([Bind(" Comment")] Post post, [FromServices]UserManager<User> userManager)
         {
             if (ModelState.IsValid)
             {

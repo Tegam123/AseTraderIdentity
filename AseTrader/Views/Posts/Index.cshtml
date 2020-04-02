@@ -1,14 +1,64 @@
 ﻿@model IEnumerable<AseTrader.Models.EntityModels.Post>
 
+
+@*@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+@model AseTrader.Models.ViewModels.PostsViewModel*@
+
+
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+
+
+
+
+
+
+
+@*<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>This is the place were everyone get's rich.</p>
+</div>
+
+<div class="text-center" align="center">
+    <form asp-action="Create">
+        <div class="form-group" align="center">
+            <textarea asp-for="Comment" rows="10" cols="80" style="width:100%;" placeholder="Please enter your review, thank you."></textarea>
+            <span asp-validation-for="Comment" class="text-danger"></span>
+        </div>
+        <div class="form-group" align="center">
+            <input type="submit" value="Add review" class="button" />&nbsp;<a asp-action="Index" class="button">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}*@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <p>
     <a asp-action="Create">Post</a>
 </p>
+
+
 <table class="table">
     <thead>
         <tr>
@@ -24,26 +74,27 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ApplicationUser.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Comment)
-            </td>
-            @if (User.Identity.Name == item.ApplicationUser.Email)
-            {
+            <tr>
                 <td>
-                    <a asp-action="Delete" asp-route-id="@item.PostId" class="small-button">Delete</a>
+                    @Html.DisplayFor(modelItem => item.ApplicationUser.FirstName)
+                    @Html.DisplayFor(modelItem => item.ApplicationUser.LastName)
                 </td>
-            }
+                <td>
+                    @Html.DisplayFor(modelItem => item.Comment)
+                </td>
+                @if (User.Identity.Name == item.ApplicationUser.Email)
+                {
+                    <td>
+                        <a asp-action="Delete" asp-route-id="@item.PostId" class="small-button">Delete</a>
+                    </td>
+                }
 
                 @*<td>
-                @if (User.HasClaim("Admin", "Yes"))
-                {
-                    <a asp-action="Delete" asp-route-id="@item.PostId" class="small-button">Delete</a>
-                }
-            </td>*@
+                        @if (User.HasClaim("Admin", "Yes"))
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.PostId" class="small-button">Delete</a>
+                        }
+                    </td>*@
             </tr>
         }
     </tbody>
