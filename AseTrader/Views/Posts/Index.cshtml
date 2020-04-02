@@ -1,0 +1,50 @@
+﻿@model IEnumerable<AseTrader.Models.EntityModels.Post>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Post</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ApplicationUser)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Comment)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ApplicationUser.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Comment)
+            </td>
+            @if (User.Identity.Name == item.ApplicationUser.Email)
+            {
+                <td>
+                    <a asp-action="Delete" asp-route-id="@item.PostId" class="small-button">Delete</a>
+                </td>
+            }
+
+                @*<td>
+                @if (User.HasClaim("Admin", "Yes"))
+                {
+                    <a asp-action="Delete" asp-route-id="@item.PostId" class="small-button">Delete</a>
+                }
+            </td>*@
+            </tr>
+        }
+    </tbody>
+</table>
