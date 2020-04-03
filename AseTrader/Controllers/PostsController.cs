@@ -10,6 +10,7 @@ using AseTrader.Models.EntityModels;
 using Microsoft.AspNetCore.Authorization;
 using AseTrader.Models;
 using Microsoft.AspNetCore.Identity;
+using AseTrader.Models.ViewModels;
 
 namespace AseTrader.Controllers
 {
@@ -26,8 +27,10 @@ namespace AseTrader.Controllers
         // GET: Posts
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Posts.Include(p => p.ApplicationUser);
-            return View(await applicationDbContext.ToListAsync());
+            var query = _context.Posts.Include(p => p.ApplicationUser);
+            var vm = new PostsViewModel();
+            vm.Posts = await query.ToListAsync();
+            return View(vm);
         }
 
         // GET: Posts/Create
@@ -42,17 +45,24 @@ namespace AseTrader.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind(" Comment")] Post post, [FromServices]UserManager<User> userManager)
+        public async Task<IActionResult> Create(PostsViewModel post, [FromServices]UserManager<User> userManager)
         {
             if (ModelState.IsValid)
             {
-                post.ApplicationUser = await userManager.GetUserAsync(User);
-                _context.Add(post);
+                var p = new Post();
+                p.Comment = post.CurrentPost.Comment;
+                p.ApplicationUser = await userManager.GetUserAsync(User);
+                _context.Add(p);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Id", post.ApplicationUserId);
-            return View(post);
+            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Id", post.CurrentPost.ApplicationUserId);
+
+            var query = _context.Posts.Include(p => p.ApplicationUser);
+            var vm = new PostsViewModel();
+            vm.Posts = await query.ToListAsync();
+
+            return View("Index", vm);
         }
 
         // GET: Posts/Delete/5
