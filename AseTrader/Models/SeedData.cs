@@ -27,16 +27,18 @@ namespace AseTrader.Models
                         FirstName = "David",
                         LastName = "Tegam",
                         Email = "dt@gmail.com",
-                        PasswordHash = "123456"
-                        
-                    },
+                        PasswordHash = "123456",
+                        UserName = "dt@gmail.com"
+
+                },
 
                     new User
                     {
                         FirstName = "Victor",
                         LastName = "Kildahl",
                         Email = "vk@gmail.com",
-                        PasswordHash = "123456"
+                        PasswordHash = "123456",
+                        UserName = "vk@gmail.com"
                     },
 
                     new User
@@ -44,7 +46,9 @@ namespace AseTrader.Models
                         FirstName = "Lasse",
                         LastName = "Mosel",
                         Email = "lm@gmail.com",
-                        PasswordHash = "123456"
+                        PasswordHash = "123456",
+                        UserName = "lm@gmail.com", 
+
                     }
                 );
                 context.SaveChanges();

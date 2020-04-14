@@ -1,0 +1,30 @@
+﻿@model List<AseTrader.Models.ViewModels.UserRoleViewModel>
+@{
+    var roleId = ViewBag.roleId;
+}
+
+<h1>EditUserInRole</h1>
+
+<form method="post">
+    <div class="card">
+        <div class="card-header"> Add or remove user from this role</div>
+        <div class="card-body">
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <div class="form-check m-1">
+                    <input type="hidden" asp-for="@Model[i].UserId" />
+                    <input type="hidden" asp-for="@Model[i].UserName" />
+                    <input asp-for="@Model[i].IsSelected" class="form-check-input" />
+                    <label class="form-check-label" asp-for="@Model[i].IsSelected">
+                        @Model[i].UserName + (@Model[i].UserId)
+                    </label>
+                </div>
+            }
+        </div>
+        <div class="card-footer">
+            <input type="submit" asp-action="EditUserInRole" asp-controller="Administration" asp-route-roleId="@roleId" value="Update" class="btn-primary"/>
+            <a asp-action="EditRole" asp-route-RoleId="@roleId" class="btn-primary" >Cancel</a>
+        </div>
+    </div>
+    
+</form>

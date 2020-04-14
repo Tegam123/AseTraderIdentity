@@ -52,6 +52,10 @@ namespace AseTrader.Controllers
                 var userCreationResult = await _userManager.CreateAsync(newUser, user.Password);
                 if (userCreationResult.Succeeded)
                 {
+                    //if (user.Email.ToLower() == "davidbaekhoj@hotmail.com")
+                    //{
+                    //    //var adminClaim = new Claim("Admin",);
+                    //}
                     await _signInManager.SignInAsync(newUser, isPersistent: false);
                     return RedirectToAction("Home", "Users");
                 }
@@ -88,7 +92,6 @@ namespace AseTrader.Controllers
                     return RedirectToAction("Home", "Users");
                 }
 
-
                 ModelState.AddModelError(string.Empty, "Invalid login attempt");
             }
             return View(model);
@@ -122,7 +125,12 @@ namespace AseTrader.Controllers
         }
 
 
-
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("index", "home");
+        }
 
         //private string GenerateToken(string username)
         //{

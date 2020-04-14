@@ -16,6 +16,7 @@ namespace AseTrader.Models.dto
         [Display(Name = "Last name")]
         public string LastName { get; set; }
 
+        [Required]
         [EmailAddress]
         public string Email { get; set; }
 
