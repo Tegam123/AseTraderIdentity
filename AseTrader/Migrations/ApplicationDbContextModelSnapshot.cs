@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace AseTrader.Data.Migrations
+namespace AseTrader.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -21,21 +21,22 @@ namespace AseTrader.Data.Migrations
 
             modelBuilder.Entity("AseTrader.Models.EntityModels.Post", b =>
                 {
-                    b.Property<int>("PostId")
+                    b.Property<long>("PostId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("User_posted_to")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(450);
 
-                    b.Property<string>("added_by")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("body")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(2000)")
+                        .HasMaxLength(2000);
 
                     b.HasKey("PostId");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("Posts");
                 });
@@ -245,6 +246,13 @@ namespace AseTrader.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("AseTrader.Models.EntityModels.Post", b =>
+                {
+                    b.HasOne("AseTrader.Models.User", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

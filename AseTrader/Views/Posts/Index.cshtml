@@ -1,0 +1,67 @@
+﻿@model AseTrader.Models.ViewModels.PostsViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>This is the place were everyone get's rich.</p>
+</div>
+
+<div class="text-center" align="center">
+    <form asp-action="Create">
+        <div class="form-group" align="center">
+            <textarea asp-for="CurrentPost.Comment" rows="10" cols="80" style="width:70%;" placeholder="Please enter your review, thank you."></textarea>
+            <span asp-validation-for="CurrentPost.Comment" class="text-danger"></span>
+        </div>
+        <div class="form-group" align="center">
+            <input type="submit" value="Post" class="button" />
+        </div>
+    </form>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CurrentPost.ApplicationUser)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CurrentPost.Comment)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Posts)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ApplicationUser.FirstName)
+                    @Html.DisplayFor(modelItem => item.ApplicationUser.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Comment)
+                </td>
+                @if (User.Identity.Name == item.ApplicationUser.Email)
+                {
+                    <td>
+                        <a asp-action="Delete" asp-route-id="@item.PostId" class="small-button">Delete</a>
+                    </td>
+                }
+
+                @*<td>
+                        @if (User.HasClaim("Admin", "Yes"))
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.PostId" class="small-button">Delete</a>
+                        }
+                    </td>*@
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
