@@ -49,6 +49,7 @@ namespace AseTrader
                 options.Password.RequireUppercase = true;
                 options.Password.RequireLowercase = true;
                 options.Password.RequiredLength = 6;
+                
             });
 
 
