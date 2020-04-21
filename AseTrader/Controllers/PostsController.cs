@@ -47,6 +47,7 @@ namespace AseTrader.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PostsViewModel post, [FromServices]UserManager<User> userManager)
         {
+            
             if (ModelState.IsValid)
             {
                 var p = new Post();

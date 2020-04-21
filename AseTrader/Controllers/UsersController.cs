@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using AseTrader.Data;
 using AseTrader.Models;
+using AseTrader.Models.EntityModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -169,6 +171,46 @@ namespace AseTrader.Controllers
         {
             //return _context.User.Any(e => e.UserId == id);
             return _context.Users.Any(e => e.Id == id);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Subscribe(string? id, [FromServices]UserManager<User> userManager)
+        {
+            if (ModelState.IsValid)
+            {
+                var friend = await userManager.FindByIdAsync(id);
+                var user = await userManager.GetUserAsync(User);
+
+                if (await _context.Follow.Where(m => m.followersId == friend.Id).Where(m => m.followingId == user.Id)
+                    .SingleOrDefaultAsync() == null)
+                {
+                    var follower = new Follow() { Followers = friend, Following = user };
+                    _context.Add(follower);
+                    await _context.SaveChangesAsync();
+                }
+
+                return RedirectToAction("Index", "Users");
+            }
+            return RedirectToAction("Index", "Users");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Unsubscribe(string? id, [FromServices]UserManager<User> userManager)
+        {
+            if (ModelState.IsValid)
+            {
+                var friend = await userManager.FindByIdAsync(id);
+                var user = await userManager.GetUserAsync(User);
+
+                var follower = await _context.Follow.Where(m => m.followersId == friend.Id).Where(m => m.followingId == user.Id).SingleOrDefaultAsync();
+                //var test = await _context.Users.FindAsync(follower);
+                _context.Remove(follower);
+
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Index", "Users");
+            }
+            return RedirectToAction("Index", "Users");
         }
     }
 }

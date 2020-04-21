@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using AseTrader.Models.EntityModels;
 using Microsoft.AspNetCore.Identity;
 
 namespace AseTrader.Models
 {
     public class User : IdentityUser
     {
-        
         [Required]
         [Display(Name = "First name")]
         public string FirstName { get; set; }
@@ -19,5 +19,8 @@ namespace AseTrader.Models
 
         public string Dumme { get; set; }
 
+        public List<Follow> Following { get; set; }
+
+        public List<Follow> Followers { get; set; }
     }
 }
