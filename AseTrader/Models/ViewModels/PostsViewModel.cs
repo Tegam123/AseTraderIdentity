@@ -9,6 +9,6 @@ namespace AseTrader.Models.ViewModels
     public class PostsViewModel
     {
         public Post CurrentPost { get; set; }
-        public List<Post> Posts { get; set; }
+        public IEnumerable<Post> Posts { get; set; }
     }
 }

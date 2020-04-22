@@ -44,12 +44,15 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Comment)
             </td>
-            @if (User.Identity.Name == item.ApplicationUser.Email)
+            <td>
+                <a asp-action="Delete" asp-route-id="@item.PostId" class="small-button">Delete</a>
+            </td>
+            @*@if (User.Identity.Name == item.ApplicationUser.Id)
             {
                 <td>
                     <a asp-action="Delete" asp-route-id="@item.PostId" class="small-button">Delete</a>
                 </td>
-            }
+            }*@
 
             @*<td>
             @if (User.HasClaim("Admin", "Yes"))

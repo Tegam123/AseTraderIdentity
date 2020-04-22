@@ -17,10 +17,9 @@ namespace AseTrader.Models
         [Display(Name = "Last name")]
         public string LastName { get; set; }
 
-        public string Dumme { get; set; }
-
         public List<Follow> Following { get; set; }
 
         public List<Follow> Followers { get; set; }
+
     }
 }

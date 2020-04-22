@@ -202,6 +202,12 @@ namespace AseTrader.Controllers
                 var friend = await userManager.FindByIdAsync(id);
                 var user = await userManager.GetUserAsync(User);
 
+                if (await _context.Follow.Where(m => m.followersId == friend.Id).Where(m => m.followingId == user.Id)
+                    .SingleOrDefaultAsync() == null)
+                {
+                    return RedirectToAction("Index", "Users");
+                }
+
                 var follower = await _context.Follow.Where(m => m.followersId == friend.Id).Where(m => m.followingId == user.Id).SingleOrDefaultAsync();
                 //var test = await _context.Users.FindAsync(follower);
                 _context.Remove(follower);
