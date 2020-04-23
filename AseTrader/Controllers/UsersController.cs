@@ -56,84 +56,21 @@ namespace AseTrader.Controllers
             return View(user);
         }
 
-        // GET: Users/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
 
-        public IActionResult Home()
-        {
-            return View();
-        }
-
-        // POST: Users/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId,FirstName,LastName,Email,PwHash,AccountType")] User user)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(user);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(user);
-        }
-
-        //// GET: Users/Edit/5
-        //public async Task<IActionResult> Edit(long? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    //var user = await _context.User.FindAsync(id);
-        //    var user = await _context.Users.FindAsync(id);
-        //    if (user == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return View(user);
-        //}
-
-        // POST: Users/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //// POST: Users/Create
         //[HttpPost]
         //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(string id, [Bind("UserId,FirstName,LastName,Email,PwHash,AccountType")] User user)
+        //public async Task<IActionResult> Create([Bind("UserId,FirstName,LastName,Email,PwHash,AccountType")] User user)
         //{
-        //    if (id != user.Id)
-        //    {
-        //        return NotFound();
-        //    }
-
         //    if (ModelState.IsValid)
         //    {
-        //        try
-        //        {
-        //            _context.Update(user);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!UserExists(user.Id))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
+        //        _context.Add(user);
+        //        await _context.SaveChangesAsync();
         //        return RedirectToAction(nameof(Index));
         //    }
         //    return View(user);
         //}
+
 
         // GET: Users/Delete/5
         public async Task<IActionResult> Delete(string? id)
@@ -167,11 +104,11 @@ namespace AseTrader.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UserExists(string id)
-        {
-            //return _context.User.Any(e => e.UserId == id);
-            return _context.Users.Any(e => e.Id == id);
-        }
+        //private bool UserExists(string id)
+        //{
+        //    //return _context.User.Any(e => e.UserId == id);
+        //    return _context.Users.Any(e => e.Id == id);
+        //}
 
         [HttpGet]
         public async Task<IActionResult> Subscribe(string? id, [FromServices]UserManager<User> userManager)
