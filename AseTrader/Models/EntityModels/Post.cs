@@ -16,11 +16,13 @@ namespace AseTrader.Models.EntityModels
         public string ApplicationUserId { get; set; }
 
         [DisplayName("User")]
-        [ForeignKey(nameof(ApplicationUserId))]
+        //[ForeignKey(nameof(ApplicationUserId))]
         public User ApplicationUser { get; set; }
  
         [DisplayName("Post")]
         [MaxLength(2000)]
         public string Comment { get; set; }
+
+        public DateTime Date { get; set; }
     }
 }
