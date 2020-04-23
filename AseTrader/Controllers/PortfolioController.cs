@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using RestSharp;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using AseTrader.Models;
 
 namespace AseTrader.Controllers
 {
@@ -28,11 +29,13 @@ namespace AseTrader.Controllers
 
             var JsonObj_PortfolioData = response.Content.ToString();
 
+            PortfolioMapper mapper = new PortfolioMapper();
 
+            mapper.TradingInfo = JsonObj_PortfolioData;
 
-            return Content(response.Content);
+            //return Content(mapper);
 
-           // return View(new Portfolio(positions));
+           return View(mapper);
         }
     }
 }
