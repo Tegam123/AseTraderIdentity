@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AseTrader.Data;
 using AseTrader.Models;
+using AseTrader.Models.EntityModels;
 using AseTrader.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

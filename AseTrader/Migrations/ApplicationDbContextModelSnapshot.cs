@@ -19,6 +19,30 @@ namespace AseTrader.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("AseTrader.Models.EntityModels.Follow", b =>
+                {
+                    b.Property<int>("FollowId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("followersId")
+                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(450);
+
+                    b.Property<string>("followingId")
+                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(450);
+
+                    b.HasKey("FollowId");
+
+                    b.HasIndex("followersId");
+
+                    b.HasIndex("followingId");
+
+                    b.ToTable("Follow");
+                });
+
             modelBuilder.Entity("AseTrader.Models.EntityModels.Post", b =>
                 {
                     b.Property<long>("PostId")
@@ -249,6 +273,19 @@ namespace AseTrader.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("AseTrader.Models.EntityModels.Follow", b =>
+                {
+                    b.HasOne("AseTrader.Models.User", "Followers")
+                        .WithMany("Followers")
+                        .HasForeignKey("followersId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("AseTrader.Models.User", "Following")
+                        .WithMany("Following")
+                        .HasForeignKey("followingId")
+                        .OnDelete(DeleteBehavior.NoAction);
                 });
 
             modelBuilder.Entity("AseTrader.Models.EntityModels.Post", b =>

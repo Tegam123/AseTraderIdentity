@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using AseTrader.Models.EntityModels;
 
 namespace AseTrader
 {
@@ -49,6 +50,7 @@ namespace AseTrader
                 options.Password.RequireUppercase = true;
                 options.Password.RequireLowercase = true;
                 options.Password.RequiredLength = 6;
+                
             });
 
 

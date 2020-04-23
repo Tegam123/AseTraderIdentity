@@ -5,13 +5,6 @@
     <UserSecretsId>aspnet-AseTrader-A1BABDB4-14BA-4499-B9A0-FF231F57DBC9</UserSecretsId>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Data\Migrations\20200401165344_seedata.cs" />
-    <Compile Remove="Data\Migrations\20200401165344_seedata.Designer.cs" />
-    <Compile Remove="Data\Migrations\20200408164025_test.cs" />
-    <Compile Remove="Data\Migrations\20200408164025_test.Designer.cs" />
-  </ItemGroup>
-
 
   <ItemGroup>
     <PackageReference Include="Alpaca.Markets" Version="3.6.1" />

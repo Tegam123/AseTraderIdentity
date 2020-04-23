@@ -16,7 +16,7 @@
             <div class="container">
                 @if (SignInManager.IsSignedIn(User))
                 {
-                    <a class="navbar-brand" asp-area="" asp-controller="Users" asp-action="Home">Ase Trader</a>
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Ase Trader</a>
                 }
                 else
                 {
@@ -33,7 +33,7 @@
                         <li class="nav-item">
                             @if (SignInManager.IsSignedIn(User))
                             {
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Home">Home</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                             }
                             else
                             {

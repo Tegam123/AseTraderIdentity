@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using AseTrader.Data;
 using AseTrader.Models;
 using AseTrader.Models.dto;
+using AseTrader.Models.EntityModels;
 using AseTrader.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -46,7 +47,6 @@ namespace AseTrader.Controllers
                     Email = user.Email,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
-
                  };
 
                 var userCreationResult = await _userManager.CreateAsync(newUser, user.Password);

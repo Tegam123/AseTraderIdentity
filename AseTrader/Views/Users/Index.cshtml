@@ -1,4 +1,8 @@
 ﻿@model IEnumerable<AseTrader.Models.User>
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
 
 @{
     ViewData["Title"] = "Index";
@@ -44,35 +48,41 @@
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
-                @*@if (User.Identity.Name == item.ApplicationUser.Email)
+
+                @if (User.Identity.Name == item.UserName)
                 {
                     <td>
-                        
-                    </td>
-                }
-                else if (true)
-                {
-                    <td>
-                        <a asp-action="Subscribe" asp-route-id="@item.PostId" class="small-button">Subscribe</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">View Profile</a>
                     </td>
                 }
                 else
                 {
                     <td>
-                        <a asp-action="Subscribe" asp-route-id="@item.PostId" class="small-button">Unsubscribe</a> |
+                        <a asp-action="Subscribe" asp-route-id="@item.Id" class="small-button">Subscribe</a> |
+                        <a asp-action="Unsubscribe" asp-route-id="@item.Id" class="small-button">Unsubscribe</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">View Profile</a>
+                    </td>
+                }
+
+
+
+                    @*//DET ER HER PROBLEMET ER*@
+                @*else if (item.Following.Exists())
+                {
+                    <td>
+                        <a asp-action="Subscribe" asp-route-id="@item.Id" class="small-button">Subscribe</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">View Profile</a>
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        <a asp-action="Unsubscribe" asp-route-id="@item.Id" class="small-button">Unsubscribe</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">View Profile</a>
                     </td>
                 }*@
-
-
-
-                <a asp-action="Subscribe" asp-route-id="@item.Id">Subscribe</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">View Profile</a>
-
-                @*<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |*@
-                @*<a asp-action="Details" asp-route-id="@item.UserId">Details</a> |*@
-                @*<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
             </td>
-            </tr>
-        }
+        </tr>
+            }
     </tbody>
 </table>

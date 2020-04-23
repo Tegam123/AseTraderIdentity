@@ -25,11 +25,23 @@ namespace AseTrader.Controllers
         }
 
         // GET: Posts
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromServices]UserManager<User> userManager)
         {
-            var query = _context.Posts.Include(p => p.ApplicationUser);
+            var user = await userManager.GetUserAsync(User);
+            var test = _context.Users.Where(t => t.Id == user.Id).Include(p => p.Following).First();
+            IEnumerable<Post> posts = new List<Post>();
+
+            var mineposts = _context.Posts.Where(p => p.ApplicationUserId == user.Id).ToList();
+            posts = posts.Concat(mineposts);
+
+            foreach (var f in test.Following)
+            {
+                var query = _context.Posts.Where(p => p.ApplicationUserId == f.followersId).ToList();
+                posts = posts.Concat(query);
+            }
+
             var vm = new PostsViewModel();
-            vm.Posts = await query.ToListAsync();
+            vm.Posts = posts;
             return View(vm);
         }
 
@@ -41,8 +53,6 @@ namespace AseTrader.Controllers
         }
 
         // POST: Posts/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PostsViewModel post, [FromServices]UserManager<User> userManager)
