@@ -2,15 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AseTrader.Models.Alpaca_dependency;
+using AseTrader.Models.Portfolio;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AseTrader.Controllers
 {
     public class PortfolioController : Controller
     {
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
-            return View();
+            IAlpacaClient alpacaClient = new AlpacaClient();
+            var positions = await alpacaClient.AlpacaClientTrading().ListPositionsAsync();
+
+            return View(new Portfolio(positions));
         }
     }
 }
