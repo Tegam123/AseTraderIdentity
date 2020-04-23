@@ -94,6 +94,8 @@ namespace AseTrader.Controllers
 
             _context.SaveChanges();
 
+            _user = user;
+
             //The final acecesstoken is placed accesstoken, need to be placed in database.
             //return Content(accesstoken);
             return View("Trading");
