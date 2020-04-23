@@ -14,7 +14,7 @@ namespace AseTrader.Models.SellStock
             var client = new RestClient("https://paper-api.alpaca.markets/v2/orders");
             client.Timeout = -1;
             var request = new RestRequest(Method.POST);
-            request.AddHeader("Authorization", "Bearer a08a8627-3ad2-4f37-9ff1-d42aec5705d4");
+            request.AddHeader("Authorization", $"Bearer {accesstoken}");
             request.AddHeader("Content-Type", "application/json");
             request.AddParameter("application/json", $"{{\r\n    \"symbol\": \"{sym}\", \r\n    \"qty\": {quantity},\r\n    \"side\": \"sell\",\r\n    \"type\": \"limit\",\r\n    \"time_in_force\": \"day\",\r\n    \"limit_price\": {price}\r\n}}", ParameterType.RequestBody);
             IRestResponse response = client.Execute(request);

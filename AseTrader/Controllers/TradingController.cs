@@ -14,6 +14,7 @@ using AseTrader.Models.SellStock;
 using AseTrader.Models.Alpaca_dependency;
 using Microsoft.AspNetCore.Authorization;
 using AseTrader.Data;
+using Microsoft.AspNetCore.Identity;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -36,19 +37,21 @@ namespace AseTrader.Controllers
         //    _logger = logger;
         //}
 
-        public IActionResult Index()
-        {
+        //public IActionResult Index()
+        //{
 
-            return View();
-        }
+        //    return View();
+        //}
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+        //public IActionResult Privacy()
+        //{
+        //    return View();
+        //}
 
-        private static string _accesstokens = "34bb3413-9fa3-407a-9087-19999d1e8e66";
-        public IActionResult TradingRecieverCode([FromQuery] string code)
+       // private readonly UserManager<User> _userManager;
+
+        //private static string _accesstokens = "34bb3413-9fa3-407a-9087-19999d1e8e66";
+        public async Task<IActionResult> TradingRecieverCode([FromQuery] string code, [FromServices]UserManager<User> userManager)
         {
             object? model = code;
 
@@ -64,7 +67,7 @@ namespace AseTrader.Controllers
             request.AddParameter("client_id", "594f6429f720875517565db7db39a584");
             request.AddParameter("client_secret", "d126b090b64c5310aa35b8e3cb7ce29661a4d8fa");
             //request.AddParameter("redirect_uri", "https://tradingplatform20200325081838.azurewebsites.net/Home/TradingRecieverCode");
-            request.AddParameter("redirect_uri", "https://localhost:44361/Trading/Trading");
+            request.AddParameter("redirect_uri", "https://localhost:44361/Trading/TradingRecieverCode");
             IRestResponse response = client.Execute(request);
 
         
@@ -76,19 +79,31 @@ namespace AseTrader.Controllers
             var accesstoken = parsed_accesstoken["access_token"].ToString();
             //_accesstokens = accesstoken;
 
-            var u = new User();
-            u.secret_accesstoken = accesstoken;
-            _context.Add(u);
+
+
+
+
+            //var userid = _userManager.GetUserId(User);
+            var user = await userManager.GetUserAsync(User);
+
+            user.secret_accesstoken = accesstoken;
+
+            await userManager.UpdateAsync(user);
+
+            _context.Update(user);
+
+            _context.SaveChanges();
 
             //The final acecesstoken is placed accesstoken, need to be placed in database.
-            return Content(accesstoken);
-            return View(code);
+            //return Content(accesstoken);
+            return View("Trading");
         }
 
+        private static User _user;
 
-
-        public IActionResult Trading()
+        public async Task<IActionResult> Trading([FromServices]UserManager<User> userManager)
         {
+            _user = await userManager.GetUserAsync(User);
             return View();
         }
 
@@ -118,7 +133,7 @@ namespace AseTrader.Controllers
             IBuyStock buyStock = new BuyStock();
             IAlpacaClient alpacaClient = new AlpacaClient();
 
-            buyStock.BuyStocks_http(sym, quantity, price, _accesstokens);
+            buyStock.BuyStocks_http(sym, quantity, price, _user.secret_accesstoken);
         }
 
         [HttpPost]
@@ -134,9 +149,8 @@ namespace AseTrader.Controllers
         public static async Task Sell_SI_Stocks(string sym, int quantity, decimal price)
         {
             ISellStock sellStock = new SellStock();
-            
 
-            sellStock.SellStocks_http(sym, quantity, price, _accesstokens);
+            sellStock.SellStocks_http(sym, quantity, price, _user.secret_accesstoken);
         }
 
 

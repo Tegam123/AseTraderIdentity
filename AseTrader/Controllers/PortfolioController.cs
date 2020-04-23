@@ -9,21 +9,24 @@ using RestSharp;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using AseTrader.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace AseTrader.Controllers
 {
     public class PortfolioController : Controller
     {
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromServices]UserManager<User> userManager)
         {
             //IAlpacaClient alpacaClient = new AlpacaClient();
             //var positions = await alpacaClient.AlpacaClientTrading().ListPositionsAsync();
 
+            var _user = await userManager.GetUserAsync(User);
+
             var client = new RestClient("https://paper-api.alpaca.markets/v2/positions");
             client.Timeout = -1;
             var request = new RestRequest(Method.GET);
-            request.AddHeader("Authorization", "Bearer 34bb3413-9fa3-407a-9087-19999d1e8e66");
+            request.AddHeader("Authorization", $"Bearer {_user.secret_accesstoken}");
             IRestResponse response = client.Execute(request);
             //Console.WriteLine(response.Content);
 
