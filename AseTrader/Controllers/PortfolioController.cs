@@ -26,7 +26,9 @@ namespace AseTrader.Controllers
             IRestResponse response = client.Execute(request);
             //Console.WriteLine(response.Content);
 
-            var JsonObj_PortfolioData = JObject.Parse(response.Content);
+            var JsonObj_PortfolioData = response.Content.ToString();
+
+
 
             return Content(response.Content);
 
