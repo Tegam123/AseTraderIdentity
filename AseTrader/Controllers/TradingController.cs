@@ -47,7 +47,7 @@ namespace AseTrader.Controllers
             return View();
         }
 
-        private static string _accesstokens = "";
+        private static string _accesstokens = "34bb3413-9fa3-407a-9087-19999d1e8e66";
         public IActionResult TradingRecieverCode([FromQuery] string code)
         {
             object? model = code;
@@ -63,17 +63,18 @@ namespace AseTrader.Controllers
             request.AddParameter("code", model);
             request.AddParameter("client_id", "594f6429f720875517565db7db39a584");
             request.AddParameter("client_secret", "d126b090b64c5310aa35b8e3cb7ce29661a4d8fa");
-            request.AddParameter("redirect_uri", "https://tradingplatform20200325081838.azurewebsites.net/Home/TradingRecieverCode");
+            //request.AddParameter("redirect_uri", "https://tradingplatform20200325081838.azurewebsites.net/Home/TradingRecieverCode");
+            request.AddParameter("redirect_uri", "https://localhost:44361/Trading/Trading");
             IRestResponse response = client.Execute(request);
 
-
+        
             //Accesstoken contains the token which shall be used to buy stocks for a specific user. 
             //This should therefore be protected from hackers.
             //var accesstoken = JsonConvert.DeserializeObject(response.Content);
 
             var parsed_accesstoken = JObject.Parse(response.Content);
             var accesstoken = parsed_accesstoken["access_token"].ToString();
-            _accesstokens = accesstoken;
+            //_accesstokens = accesstoken;
 
             var u = new User();
             u.secret_accesstoken = accesstoken;
