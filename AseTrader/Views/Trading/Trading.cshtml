@@ -1,0 +1,165 @@
+﻿@using System.Globalization
+@model IActionResult
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+    <link href="~/css/site.css" rel="stylesheet" />
+    <link href="~/css/form-css.css" rel="stylesheet" />
+    @{
+        ViewData["Title"] = "View";
+    }
+</head>
+<body>
+
+    <button ID="alpaca_auth" type="button">Authorize Alpaca</button>
+
+    <div class="container">
+
+        <form class="signUp">
+            <h3>Buy Stock</h3>
+            <p>
+                In the fields below, just<br>
+                enter your stock, quantity and price.
+            </p><br>
+            <input class="w100" type="text" placeholder="Stock Symbol" reqired autocomplete="off" id="fname" name="fname" />
+            <input type="text" id="lname" name="lname" placeholder="Quantity" reqired />
+            <input type="text" id="pname" name="pname" placeholder="Price" reqired />
+            <button class="form-btn sx log-in" type="button">Sell</button>
+            <button ID="btn_buy_stock_real_test" class="form-btn dx" type="submit">Buy</button>
+        </form>
+        <form class="signIn">
+            <h3>Sell Stock </h3>
+            <p>
+                In the fields below, just<br>
+                enter your stock, quantity and price.
+            </p><br>
+            <input class="w100" type="text" placeholder="Stock Symbol" reqired autocomplete="off" id="fname_sell" name="fname_sell" />
+            <input type="text" id="lname_sell" name="lname_sell" placeholder="Quantity" reqired />
+            <input type="text" id="pname_sell" name="pname_sell" placeholder="Price" reqired />
+            <button class="form-btn sx back" type="button">Buy</button>
+            <button ID="btn_sell_stock_real_test" class="form-btn dx" type="submit">Sell</button>
+        </form>
+    </div>
+
+    <!--
+    <div class="column">
+        <div class="container_forms">
+            <form ID="my_stock" class="buystock-100-form validate-form">
+                <input class="w100" type="text" id="fname" name="fname" placeholder="Write stock symbol"><br>
+                <input type="text" id="lname" name="lname" placeholder="Quantity (How many Stocks to be bought)"><br>
+                <input id="pname" type="text" name="pname" placeholder="Price for stock in $"><br>
+                <input class="form-btn sx log-in" ID="btn_buy_stock_real_test" type="submit" value="Buy">
+                <input class="form-btn dx" ID="btn_sell_stock_real_test" type="submit" value="Buy">
+            </form>
+        </div>
+    </div>
+
+    -->
+    <!-- TradingView Widget BEGIN -->
+
+    <div class="notmove" align="right">
+        <div class="tradingview-widget-container" align="right">
+            <div id="tradingview_773e5"></div>
+            <div class="tradingview-widget-copyright">
+                <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+                <script type="text/javascript">
+                   new TradingView.widget(
+                   {
+                   "width": 880,
+                   "height": 550,
+                   "symbol": "NASDAQ:AAPL",
+                   "interval": "D",
+                   "timezone": "Etc/UTC",
+                   "theme": "dark",
+                   "style": "1",
+                   "locale": "en",
+                   "toolbar_bg": "#f1f3f6",
+                   "enable_publishing": false,
+                   "hide_side_toolbar": false,
+                   "allow_symbol_change": true,
+                   "details": true,
+                   "container_id": "tradingview_773e5"
+                 }
+                   );
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <!-- TradingView Widget END -->
+
+
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+
+    <script src="js/index.js"></script>
+</body>
+</html>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="lib/jquery/dist/jquery.js"></script>
+
+    <script type="text/javascript">
+ $(function() {
+        $('#btn_buy_stock_real_test').click(function() {
+            var builder = {
+                stock_symbol: $('#fname').val(),
+                quantity: $('#lname').val(),
+                price: $('#pname').val()
+            };
+            $.ajax({
+                type: 'POST',
+                data: builder,
+                url: '@Url.Action("Buy_SI_Stocks_dispatcher", "Trading")',
+                success: function(data) {
+                    alert("The buy deal went though, wait for confirmation")
+                }
+            });
+        })
+    });
+    document.getElementById("btn_buy_stock_real_test").addEventListener("click", function(event) {
+        event.preventDefault()
+    }); </script>
+
+    <script type="text/javascript">
+ $('#alpaca_auth').click(function() {
+        var settings = {
+          "url": "https://app.alpaca.markets/oauth/authorize?response_type=code&client_id=594f6429f720875517565db7db39a584&redirect_uri=https://tradingplatform20200325081838.azurewebsites.net/Home/TradingRecieverCode&state=8e02c9c6a3484fadaaf841fb1df290e1&scope=account:write%20trading",
+         "method": "GET",
+         "timeout": 0,
+        };
+        location.href="https://app.alpaca.markets/oauth/authorize?response_type=code&client_id=594f6429f720875517565db7db39a584&redirect_uri=https://tradingplatform20200325081838.azurewebsites.net/Home/TradingRecieverCode&state=8e02c9c6a3484fadaaf841fb1df290e1&scope=account:write%20trading";
+        $.ajax(settings).done(function(response) {
+            console.log(response);
+        });
+    });  </script>
+
+    <script type="text/javascript">
+ $(function() {
+            $('#btn_sell_stock_real_test').click(function() {
+                var builder = {
+                    stock_symbol: $('#fname_sell').val(),
+                    quantity: $('#lname_sell').val(),
+                    price: $('#pname_sell').val()
+                };
+                $.ajax({
+                    type: 'POST',
+                    data: builder,
+                    url: '@Url.Action("Sell_SI_Stocks_dispatcher", "Trading")',
+                    success: function(data) {
+                        alert("The sell deal went though, wait for confirmation")
+                    }
+                });
+            })
+        });
+        document.getElementById("btn_sell_stock_real_test").addEventListener("click", function(event) {
+            event.preventDefault()
+        }); </script>
+
+
+}

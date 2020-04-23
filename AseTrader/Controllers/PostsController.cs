@@ -34,10 +34,10 @@ namespace AseTrader.Controllers
             var mineposts = _context.Posts.Where(p => p.ApplicationUserId == user.Id).ToList();
             posts = posts.Concat(mineposts);
 
-            foreach (var f in test.Following)
+            foreach (var f in test.Following) 
             {
-                var query = _context.Posts.Where(p => p.ApplicationUserId == f.followersId).ToList();
-                posts = posts.Concat(query);
+                var query = _context.Posts.Where(p => p.ApplicationUserId == f.followersId).Include(p => p.ApplicationUser).ToList();
+                posts = posts.Concat(query).OrderByDescending(d => d.Date);
             }
 
             var vm = new PostsViewModel();
@@ -61,6 +61,7 @@ namespace AseTrader.Controllers
             {
                 var p = new Post();
                 p.Comment = post.CurrentPost.Comment;
+                p.Date = DateTime.Now;
                 p.ApplicationUser = await userManager.GetUserAsync(User);
                 _context.Add(p);
                 await _context.SaveChangesAsync();

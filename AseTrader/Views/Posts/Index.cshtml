@@ -1,4 +1,5 @@
-﻿@model AseTrader.Models.ViewModels.PostsViewModel
+﻿@using AseTrader.Controllers
+@model AseTrader.Models.ViewModels.PostsViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -23,44 +24,39 @@
 
 <table class="table">
     <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.CurrentPost.ApplicationUser)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CurrentPost.Comment)
-            </th>
-            <th></th>
-        </tr>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.CurrentPost.ApplicationUser)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CurrentPost.Comment)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CurrentPost.Date)
+        </th>
+    </tr>
     </thead>
     <tbody>
         @foreach (var item in Model.Posts)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ApplicationUser.FirstName)
-               
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Comment)
-            </td>
-            <td>
-                <a asp-action="Delete" asp-route-id="@item.PostId" class="small-button">Delete</a>
-            </td>
-            @*@if (User.Identity.Name == item.ApplicationUser.Id)
-            {
+            <tr>
                 <td>
-                    <a asp-action="Delete" asp-route-id="@item.PostId" class="small-button">Delete</a>
+                    @Html.DisplayFor(modelItem => item.ApplicationUser.FirstName)
+                    @Html.DisplayFor(modelItem => item.ApplicationUser.LastName)
                 </td>
-            }*@
-
-            @*<td>
-            @if (User.HasClaim("Admin", "Yes"))
-            {
-                <a asp-action="Delete" asp-route-id="@item.PostId" class="small-button">Delete</a>
-            }
-        </td>*@
-        </tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Comment)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                @if (User.Identity.Name == item.ApplicationUser.UserName)
+                {
+                    <td>
+                        <a asp-action="Delete" asp-route-id="@item.PostId" class="small-button">Delete</a>
+                    </td>
+                }
+            </tr>
         }
     </tbody>
 </table>
