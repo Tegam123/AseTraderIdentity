@@ -14,8 +14,8 @@ using AseTrader.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
-using AseTrader.Models.EntityModels;
 
 namespace AseTrader
 {
@@ -26,7 +26,7 @@ namespace AseTrader
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        public IConfiguration Configuration { get; }  // skal den være public??(den er private hos Kudvenkat)
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -41,6 +41,8 @@ namespace AseTrader
             //services.AddDefaultIdentity<User>()
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
 
+
+
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.Configure<IdentityOptions>(options =>
@@ -50,9 +52,24 @@ namespace AseTrader
                 options.Password.RequireUppercase = true;
                 options.Password.RequireLowercase = true;
                 options.Password.RequiredLength = 6;
-                
             });
 
+            services.AddAuthentication()
+                .AddGoogle(options =>
+                {
+                    options.ClientId = "5319443857-5riuvt4qjp7ghon0hgv34i3ll5r43hpa.apps.googleusercontent.com";
+                    options.ClientSecret = "O_U_5acXrEHX5Np_xSmfi7Y5";
+                })
+                .AddFacebook(options =>
+                {
+                    options.AppId = "560845281478718";
+                    options.AppSecret = "50f311381de1eb4988f44fc4a054414d";
+                })
+                .AddMicrosoftAccount(options =>
+                {
+                    options.ClientId = "c2080273-e878-4efc-a6ad-2fff61a43c9b";
+                    options.ClientSecret = "bOdCGq]/OTtt4JF:4q7H5m-BL1]iIK.m";
+                });
 
             //services.AddAuthentication(options =>
             //{

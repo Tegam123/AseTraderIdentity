@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 using AseTrader.Data;
 using AseTrader.Models;
 using AseTrader.Models.dto;
-using AseTrader.Models.EntityModels;
 using AseTrader.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -31,6 +31,7 @@ namespace AseTrader.Controllers
             _userManager = userManager;
             Configuration = configuration;
         }
+
         public IActionResult Index()
         {
             return View();
@@ -47,7 +48,8 @@ namespace AseTrader.Controllers
                     Email = user.Email,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
-                 };
+
+                };
 
                 var userCreationResult = await _userManager.CreateAsync(newUser, user.Password);
                 if (userCreationResult.Succeeded)
@@ -62,7 +64,7 @@ namespace AseTrader.Controllers
 
                 foreach (var error in userCreationResult.Errors)
                 {
-                    ModelState.AddModelError(string.Empty,error.Description);
+                    ModelState.AddModelError(string.Empty, error.Description);
                 }
 
                 return BadRequest(ModelState);
@@ -76,6 +78,20 @@ namespace AseTrader.Controllers
         public IActionResult Register()
         {
             return View();
+        }
+
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(string returnUrl)
+        {
+            LoginViewModel model = new LoginViewModel()
+            {
+                ReturnUrl = returnUrl,
+                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+            };
+
+            return View(model);
         }
 
 
@@ -96,6 +112,92 @@ namespace AseTrader.Controllers
             }
             return View(model);
         }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult ExternalLogin(string provider, string returnUrl)
+        {
+            var redirectUrl = Url.Action("ExternalLoginCallback", "Account",
+                new { ReturnUrl = returnUrl });
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            return new ChallengeResult(provider, properties);
+        }
+
+
+        [AllowAnonymous]
+        public async Task<ActionResult> 
+            ExternalLoginCallback(string returnUrl = null, string remoteError = null)
+        {
+            returnUrl = returnUrl ?? Url.Content("~/");
+
+            LoginViewModel loginViewModel = new LoginViewModel
+            {
+                ReturnUrl = returnUrl,
+                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+            };
+
+            if (remoteError != null)
+            {
+                ModelState.AddModelError(string.Empty, $"Error from external provider: {remoteError}");
+
+                return View("Login", loginViewModel);
+            }
+
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                ModelState.AddModelError(string.Empty, "Error loading external login information");
+
+                return View("Login", loginViewModel);
+            }
+
+            var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider,
+                info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+
+            if (signInResult.Succeeded)
+            {
+                return LocalRedirect(returnUrl);
+            }
+            else
+            {
+                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+
+                if (email != null)
+                {
+                    var user = await _userManager.FindByEmailAsync(email);
+                    
+                    if (user == null)
+                    {
+                        user = new User
+                        {
+                            UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
+                            Email = info.Principal.FindFirstValue(ClaimTypes.Email)
+                        };
+
+                        await _userManager.CreateAsync(user);
+                    }
+
+                    await _userManager.AddLoginAsync(user, info);
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+
+                    return LocalRedirect(returnUrl);
+                }
+
+                ViewBag.ErrorTitle = $"Email claim not recieved from: {info.LoginProvider}";
+                ViewBag.Errormassage = $"Please contact support on kildahl@support.dk";
+
+                return View("Error");
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("index", "home");
+        }
+
 
         //[HttpPost("Jwtlogin")]
         //public async Task<IActionResult> JWTlogin([FromBody] LoginViewModel loginUser)
@@ -118,19 +220,6 @@ namespace AseTrader.Controllers
 
 
 
-        [HttpGet]
-        public IActionResult Login()
-        {
-            return View();
-        }
-
-
-        [HttpPost]
-        public async Task<IActionResult> Logout()
-        {
-            await _signInManager.SignOutAsync();
-            return RedirectToAction("index", "home");
-        }
 
         //private string GenerateToken(string username)
         //{
