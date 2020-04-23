@@ -105,7 +105,7 @@ namespace AseTrader.Controllers
 
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Home", "Users");
+                    return RedirectToAction("Index", "Home");
                 }
 
                 ModelState.AddModelError(string.Empty, "Invalid login attempt");

@@ -34,15 +34,12 @@ namespace AseTrader.Controllers
             var mineposts = _context.Posts.Where(p => p.ApplicationUserId == user.Id).ToList();
             posts = posts.Concat(mineposts);
 
-
-            foreach (var f in test.Following)
+            foreach (var f in test.Following) 
             {
-                var query = _context.Posts.Where(p => p.ApplicationUserId == f.followersId).ToList();
-                posts = posts.Concat(query);
+                var query = _context.Posts.Where(p => p.ApplicationUserId == f.followersId).Include(p => p.ApplicationUser).ToList();
+                posts = posts.Concat(query).OrderByDescending(d => d.Date);
             }
 
-
-            //var test2 = _context.Posts.Include(p => p.ApplicationUser);
             var vm = new PostsViewModel();
             vm.Posts = posts;
             return View(vm);
@@ -56,8 +53,6 @@ namespace AseTrader.Controllers
         }
 
         // POST: Posts/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PostsViewModel post, [FromServices]UserManager<User> userManager)
@@ -66,6 +61,7 @@ namespace AseTrader.Controllers
             {
                 var p = new Post();
                 p.Comment = post.CurrentPost.Comment;
+                p.Date = DateTime.Now;
                 p.ApplicationUser = await userManager.GetUserAsync(User);
                 _context.Add(p);
                 await _context.SaveChangesAsync();
@@ -73,32 +69,12 @@ namespace AseTrader.Controllers
             }
             ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Id", post.CurrentPost.ApplicationUserId);
 
-            //var user = await userManager.GetUserAsync(User);
-            //var test = _context.Users.Find(user.Id);
-            //    //.Include(p => p.Following).ToList();
-
-
-            
-
             var query = _context.Posts.Include(p => p.ApplicationUser);
             var vm = new PostsViewModel();
             vm.Posts = await query.ToListAsync();
 
-
             return View("Index", vm);
         }
-
-
-        //var friend = await userManager.FindByIdAsync(id);
-        //var user = await userManager.GetUserAsync(User);
-
-        //    if (await _context.Follow.Where(m => m.followersId == friend.Id).Where(m => m.followingId == user.Id)
-        //.SingleOrDefaultAsync() == null)
-
-
-
-
-
 
         // GET: Posts/Delete/5
         public async Task<IActionResult> Delete(long? id)

@@ -21,5 +21,7 @@ namespace AseTrader.Models
 
         public List<Follow> Followers { get; set; }
 
+        public string secret_accesstoken { get; set; }
+
     }
 }
