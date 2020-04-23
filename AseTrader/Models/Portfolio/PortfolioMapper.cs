@@ -8,6 +8,6 @@ namespace AseTrader.Models
 {
     public class PortfolioMapper
     {
-        public string TradingInfo { get; set; }
+        public object TradingInfo { get; set; }
     }
 }

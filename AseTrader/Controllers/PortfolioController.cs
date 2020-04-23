@@ -15,7 +15,7 @@ namespace AseTrader.Controllers
     public class PortfolioController : Controller
     {
 
-        public async Task<IActionResult> IndexAsync()
+        public async Task<IActionResult> Index()
         {
             //IAlpacaClient alpacaClient = new AlpacaClient();
             //var positions = await alpacaClient.AlpacaClientTrading().ListPositionsAsync();
@@ -27,13 +27,13 @@ namespace AseTrader.Controllers
             IRestResponse response = client.Execute(request);
             //Console.WriteLine(response.Content);
 
-            var JsonObj_PortfolioData = response.Content.ToString();
+            var JsonObj_PortfolioData = JsonConvert.DeserializeObject(response.Content);
 
             PortfolioMapper mapper = new PortfolioMapper();
 
             mapper.TradingInfo = JsonObj_PortfolioData;
 
-            //return Content(mapper);
+            //return Content(mapper.TradingInfo);
 
            return View(mapper);
         }

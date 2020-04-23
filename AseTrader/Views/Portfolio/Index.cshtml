@@ -1,0 +1,67 @@
+﻿@model AseTrader.Models.PortfolioMapper
+@using Newtonsoft.Json
+@{
+    ViewData["Title"] = "Index";
+
+}
+
+
+<h1>Portfolio</h1>
+<p id="demo"></p>
+
+<table class="table" id="table">
+    <thead>
+        <tr>
+            <th>Stocks</th>
+            <th>Quantity</th>
+            <th>Current price</th>
+        </tr>
+    </thead>
+    <tbody>
+
+      
+
+    </tbody>
+</table>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="lib/jquery/dist/jquery.js"></script>
+
+
+    
+
+    <script type="text/javascript">
+       
+        var obj, dbj = "";
+
+        obj = @Html.Raw(Model.TradingInfo);
+
+
+        let Symbol_stock = [];
+        let Qty = [];
+        let Current_price = [];
+
+
+        for (let item of obj) {
+            Symbol_stock.push(item.symbol);
+            Qty.push(item.qty);
+            Current_price.push(item.current_price);
+        }
+
+        var arrayLength = parseInt(Symbol_stock.length);
+
+        for (i = 0; i < arrayLength; i++) {
+            $("#table tbody").append("<tr><td>" + Symbol_stock[i] + "</td>" + "<td>" + Qty[i] + "</td>" + "<td>" + Current_price[i] + "</td></tr>");
+        }
+
+        setTimeout("window.location.reload();", 5000);
+
+        
+
+
+    </script>
+
+}
