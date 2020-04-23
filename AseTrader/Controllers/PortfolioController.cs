@@ -13,6 +13,7 @@ namespace AseTrader.Controllers
 {
     public class PortfolioController : Controller
     {
+
         public async Task<IActionResult> IndexAsync()
         {
             //IAlpacaClient alpacaClient = new AlpacaClient();
