@@ -19,5 +19,7 @@ namespace AseTrader.Models
 
         public string Dumme { get; set; }
 
+        public string secret_accesstoken { get; set; }
+
     }
 }
