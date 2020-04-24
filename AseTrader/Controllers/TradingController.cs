@@ -25,11 +25,14 @@ namespace AseTrader.Controllers
     {
 
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public TradingController(ApplicationDbContext context)
+        public TradingController(ApplicationDbContext context, [FromServices]UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
+
         //private readonly ILogger<TradingController> _logger;
 
         //public TradingController(ILogger<TradingController> logger)
@@ -48,10 +51,10 @@ namespace AseTrader.Controllers
         //    return View();
         //}
 
-       // private readonly UserManager<User> _userManager;
+
 
         //private static string _accesstokens = "34bb3413-9fa3-407a-9087-19999d1e8e66";
-        public async Task<IActionResult> TradingRecieverCode([FromQuery] string code, [FromServices]UserManager<User> userManager)
+        public async Task<IActionResult> TradingRecieverCode([FromQuery] string code)
         {
             object? model = code;
 
@@ -84,28 +87,26 @@ namespace AseTrader.Controllers
 
 
             //var userid = _userManager.GetUserId(User);
-            var user = await userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User);
 
             user.secret_accesstoken = accesstoken;
 
-            await userManager.UpdateAsync(user);
+            await _userManager.UpdateAsync(user);
 
             _context.Update(user);
 
             _context.SaveChanges();
 
-            _user = user;
+            
 
             //The final acecesstoken is placed accesstoken, need to be placed in database.
             //return Content(accesstoken);
             return View("Trading");
         }
 
-        private static User _user;
-
-        public async Task<IActionResult> Trading([FromServices]UserManager<User> userManager)
+        public async Task<IActionResult> TradingAsync([FromServices]UserManager<User> userManager)
         {
-            _user = await userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User);
             return View();
         }
 
@@ -130,12 +131,19 @@ namespace AseTrader.Controllers
 
         }
 
-        public static async Task Buy_SI_Stocks(string sym, int quantity, decimal price)
+        private async Task<User> GetCurrentUser()
+        {
+            return await _userManager.GetUserAsync(HttpContext.User);
+        }
+
+        public async Task Buy_SI_Stocks(string sym, int quantity, decimal price)
         {
             IBuyStock buyStock = new BuyStock();
             IAlpacaClient alpacaClient = new AlpacaClient();
 
-            buyStock.BuyStocks_http(sym, quantity, price, _user.secret_accesstoken);
+            var currentUser = await GetCurrentUser();
+
+            buyStock.BuyStocks_http(sym, quantity, price, currentUser.secret_accesstoken);
         }
 
         [HttpPost]
@@ -148,11 +156,13 @@ namespace AseTrader.Controllers
 
         }
 
-        public static async Task Sell_SI_Stocks(string sym, int quantity, decimal price)
+        public async Task Sell_SI_Stocks(string sym, int quantity, decimal price)
         {
             ISellStock sellStock = new SellStock();
 
-            sellStock.SellStocks_http(sym, quantity, price, _user.secret_accesstoken);
+            var currentUser = await GetCurrentUser();
+
+            sellStock.SellStocks_http(sym, quantity, price, currentUser.secret_accesstoken);
         }
 
 
