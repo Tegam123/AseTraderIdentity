@@ -31,7 +31,7 @@ namespace AseTrader.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                users = users.Where(u => u.FirstName.Contains(searchString));
+                users = users.Where(u => u.FirstName.Contains(searchString));   
             }
 
             return View(await users.ToListAsync());

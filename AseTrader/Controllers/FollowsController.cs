@@ -25,5 +25,7 @@ namespace AseTrader.Controllers
             var applicationDbContext = _context.Follow.Include(f => f.Followers).Include(f => f.Following);
             return View(await applicationDbContext.ToListAsync());
         }
+
+
     }
 }

@@ -10,10 +10,10 @@ namespace AseTrader.Models
 {
     public class User : IdentityUser
     {
-        [Required]
+        //[Required]
         [Display(Name = "First name")]
         public string FirstName { get; set; }
-        [Required]
+        //[Required]
         [Display(Name = "Last name")]
         public string LastName { get; set; }
 

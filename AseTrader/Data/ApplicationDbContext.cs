@@ -16,8 +16,8 @@ namespace AseTrader.Data
         }
 
         public DbSet<Post> Posts { get; set; }
-        //public DbSet<Follow> Followers { get; set; }
-        //public DbSet<User> Users { get; set; }
+        public DbSet<Follow> Followers { get; set; }
+        public DbSet<User> Users { get; set; }
 
 
 

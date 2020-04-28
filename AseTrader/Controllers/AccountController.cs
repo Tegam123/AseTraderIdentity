@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using AseTrader.Data;
 using AseTrader.Models;
 using AseTrader.Models.dto;
+using AseTrader.Models.EntityModels;
 using AseTrader.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -59,7 +60,7 @@ namespace AseTrader.Controllers
                     //    //var adminClaim = new Claim("Admin",);
                     //}
                     await _signInManager.SignInAsync(newUser, isPersistent: false);
-                    return RedirectToAction("Home", "Users");
+                    return RedirectToAction("Index", "Home");
                 }
 
                 foreach (var error in userCreationResult.Errors)
