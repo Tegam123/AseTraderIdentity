@@ -69,10 +69,10 @@ namespace AseTrader.Controllers
             request.AddParameter("code", model);
             request.AddParameter("client_id", "594f6429f720875517565db7db39a584");
             request.AddParameter("client_secret", "d126b090b64c5310aa35b8e3cb7ce29661a4d8fa");
-            //request.AddParameter("redirect_uri", "https://tradingplatform20200325081838.azurewebsites.net/Home/TradingRecieverCode");
-            request.AddParameter("redirect_uri", "https://localhost:44361/Trading/TradingRecieverCode");
+            request.AddParameter("redirect_uri", "https://asetrader20200424150538.azurewebsites.net/Trading/TradingRecieverCode");
+            //request.AddParameter("redirect_uri", "https://localhost:44361/Trading/TradingRecieverCode");
             IRestResponse response = client.Execute(request);
-
+            
         
             //Accesstoken contains the token which shall be used to buy stocks for a specific user. 
             //This should therefore be protected from hackers.
