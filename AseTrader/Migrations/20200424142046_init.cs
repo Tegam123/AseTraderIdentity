@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace AseTrader.Migrations
 {
-    public partial class Intial : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -42,7 +42,7 @@ namespace AseTrader.Migrations
                     AccessFailedCount = table.Column<int>(nullable: false),
                     FirstName = table.Column<string>(nullable: false),
                     LastName = table.Column<string>(nullable: false),
-                    Dumme = table.Column<string>(nullable: true)
+                    secret_accesstoken = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -186,7 +186,8 @@ namespace AseTrader.Migrations
                     PostId = table.Column<long>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ApplicationUserId = table.Column<string>(maxLength: 450, nullable: true),
-                    Comment = table.Column<string>(maxLength: 2000, nullable: true)
+                    Comment = table.Column<string>(maxLength: 2000, nullable: true),
+                    Date = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {

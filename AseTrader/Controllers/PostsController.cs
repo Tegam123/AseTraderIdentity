@@ -29,19 +29,23 @@ namespace AseTrader.Controllers
         {
             var user = await userManager.GetUserAsync(User);
             var test = _context.Users.Where(t => t.Id == user.Id).Include(p => p.Following).First();
+
             IEnumerable<Post> posts = new List<Post>();
 
-            var mineposts = _context.Posts.Where(p => p.ApplicationUserId == user.Id).ToList();
-            posts = posts.Concat(mineposts);
 
-            foreach (var f in test.Following) 
+            var mineposts = _context.Posts.Where(p => p.ApplicationUserId == user.Id).ToList();
+
+            posts = posts.Concat(mineposts);
+            
+           
+            foreach(var followersPosts in test.Following)
             {
-                var query = _context.Posts.Where(p => p.ApplicationUserId == f.followersId).Include(p => p.ApplicationUser).ToList();
-                posts = posts.Concat(query).OrderByDescending(d => d.Date);
+                posts = posts.Concat(_context.Posts.Where(p => p.ApplicationUserId == followersPosts.followersId).Include(p => p.ApplicationUser).ToList());
             }
 
+
             var vm = new PostsViewModel();
-            vm.Posts = posts;
+            vm.Posts = posts.OrderByDescending(x => x.Date);
             return View(vm);
         }
 
