@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,8 +15,11 @@ using AseTrader.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 
 namespace AseTrader.Controllers
 {
@@ -22,13 +27,18 @@ namespace AseTrader.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly SignInManager<User> _signInManager;
+        private readonly ILogger<AccountController> _logger;
         private readonly UserManager<User> _userManager;
         public IConfiguration Configuration { get; set; }
 
-        public AccountController(ApplicationDbContext context, UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration configuration)
+        public AccountController(ApplicationDbContext context, UserManager<User> userManager, 
+            SignInManager<User> signInManager,
+            ILogger<AccountController> logger,
+            IConfiguration configuration)
         {
             _context = context;
             _signInManager = signInManager;
+            _logger = logger;
             _userManager = userManager;
             Configuration = configuration;
         }
@@ -53,14 +63,41 @@ namespace AseTrader.Controllers
                 };
 
                 var userCreationResult = await _userManager.CreateAsync(newUser, user.Password);
+
                 if (userCreationResult.Succeeded)
                 {
+                    var token = await _userManager.GenerateEmailConfirmationTokenAsync(newUser); //added (30/04) generating confirmation token for user upon creation; next we build confirmation link/url
+
+                    var confirmationLink = Url.Action("ConfirmEmail", "Account",
+                                            new {userId = newUser.Id, token = token}, Request.Scheme); //added (30/04) building confirmation link/url
+                    
+                    _logger.Log(LogLevel.Warning, confirmationLink);
+
                     //if (user.Email.ToLower() == "davidbaekhoj@hotmail.com")
                     //{
                     //    //var adminClaim = new Claim("Admin",);
                     //}
-                    await _signInManager.SignInAsync(newUser, isPersistent: false);
-                    return RedirectToAction("Index", "Home");
+
+                    var mailMessage = new MailMessage("asetrader2@gmail.com", newUser.Email, "Confirmation email ASE Trader", confirmationLink); // actual message; inhereting from/Implements IDisposaple (https://docs.microsoft.com/en-us/dotnet/api/system.net.mail.mailmessage?view=netcore-3.1)
+
+                    SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587); //(465)config for free email - not viable for many emails 
+                    
+                    smtpClient.UseDefaultCredentials = false;
+                    smtpClient.EnableSsl = true;
+                    smtpClient.Credentials = new NetworkCredential("asetrader2@gmail.com", "PassWord1!");
+
+                    smtpClient.Send(mailMessage);
+
+                    ViewBag.ErrorTitle = "Registration succesful";
+                    ViewBag.ErrorMessage = "Before you can Login, please confirm your " +
+                                           "email, by clicking on the confirmation link we have emailed you";
+                    return View("EmailConfirmation");
+
+
+                    //commenting out following 2 lines (30/04) to make sure user cannot login before registration confirmation
+                    //adding above 4 lines -- needed for registration confirmation
+                    //await _signInManager.SignInAsync(newUser, isPersistent: false);
+                    //return RedirectToAction("Index", "Home");
                 }
 
                 foreach (var error in userCreationResult.Errors)
@@ -84,6 +121,35 @@ namespace AseTrader.Controllers
 
         [HttpGet]
         [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (userId == null || token == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                ViewBag.Errormessage = $"The User ID {userId} is invalid";
+                return View("NotFound");
+            }
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+
+            if (result.Succeeded)
+            {
+                return View();
+            }
+
+            ViewBag.ErrorTitle = "Email cannot be confirmed";
+            return View("EmailConfirmation");
+
+        }
+
+
+        [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl)
         {
             LoginViewModel model = new LoginViewModel()
@@ -97,16 +163,35 @@ namespace AseTrader.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl) //BS: added second param (30/04)
         {
+            //added to avoid error in if(ModelState.IsValid)
+            model.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
             if (ModelState.IsValid)
             {
+                //added to ensure correct error message if user has not confirmed registration---
+                var user = await _userManager.FindByEmailAsync(model.Email);
+
+                if (user != null && !user.EmailConfirmed &&
+                                    (await  _userManager.CheckPasswordAsync(user, model.Password))) // last condition ensures provided username and password is correct (avoiding brute force attacks and account enumerations)
+                {
+                    ModelState.AddModelError(string.Empty,"Email not yet confirmed");
+                    return View(model);
+                }
+                //--- 
+
                 var result = await _signInManager.PasswordSignInAsync(model.Email,
-                    model.Password, true, false);
+                    model.Password, model.RememberMe, false); // changed (30/04) to accomodate RememberMe
 
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Home");
+                    if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))  // BS: added inner if statement (30/04)
+                    {
+                        return Redirect(returnUrl);
+                    }
+                    else
+                        return RedirectToAction("Index", "Home");
                 }
 
                 ModelState.AddModelError(string.Empty, "Invalid login attempt");
@@ -120,7 +205,9 @@ namespace AseTrader.Controllers
         {
             var redirectUrl = Url.Action("ExternalLoginCallback", "Account",
                 new { ReturnUrl = returnUrl });
+
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+           
             return new ChallengeResult(provider, properties);
         }
 
@@ -152,6 +239,21 @@ namespace AseTrader.Controllers
                 return View("Login", loginViewModel);
             }
 
+            // added (30/04) 
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+            User user = null;
+
+            if (email != null) //checking to see if we have recieved email from external provider
+            {
+                user = await _userManager.FindByEmailAsync(email); // then find user
+
+                if (user != null && !user.EmailConfirmed) // by now user is already authenticated by external provider
+                {
+                    ModelState.AddModelError(string.Empty, "Email not confirmed yet");
+                    return View("Login", loginViewModel);
+                }
+            }
+
             var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider,
                 info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
 
@@ -161,12 +263,8 @@ namespace AseTrader.Controllers
             }
             else
             {
-                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-
                 if (email != null)
                 {
-                    var user = await _userManager.FindByEmailAsync(email);
-                    
                     if (user == null)
                     {
                         user = new User
@@ -176,6 +274,20 @@ namespace AseTrader.Controllers
                         };
 
                         await _userManager.CreateAsync(user);
+
+                        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                        var confirmationLink = Url.Action("ConfirmEmail", "Account",
+                            new {userId = user.Id, token = token}, Request.Scheme);
+
+                        _logger.Log(LogLevel.Warning, confirmationLink);
+
+                        var mailMessage = new MailMessage("brianstjernholm@hotmail.com", user.Email, confirmationLink, null);
+
+                        ViewBag.ErrorTitle = "Registration succesful";
+                        ViewBag.ErrorMessage = "Before you can Login, please confirm your " +
+                                               "email, by clicking on the confirmation link we have emailed you";
+                        return View("EmailConfirmation");
                     }
 
                     await _userManager.AddLoginAsync(user, info);

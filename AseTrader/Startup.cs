@@ -44,8 +44,12 @@ namespace AseTrader
 
 
 
-            services.AddIdentity<User, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddIdentity<User, IdentityRole>(options =>
+                {
+                    options.SignIn.RequireConfirmedEmail = true;
+                }).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders(); //added "AddDefaultTokenProviders() to inable tokens for 
+
+
             services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequireDigit = true;
@@ -53,6 +57,8 @@ namespace AseTrader
                 options.Password.RequireUppercase = true;
                 options.Password.RequireLowercase = true;
                 options.Password.RequiredLength = 6;
+
+                options.SignIn.RequireConfirmedEmail = true;
             });
 
             services.AddAuthentication()

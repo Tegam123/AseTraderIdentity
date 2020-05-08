@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AseTrader.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200424142046_init")]
-    partial class init
+    [Migration("20200503190029_addingRegisterConfirmationInitial")]
+    partial class addingRegisterConfirmationInitial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -90,11 +90,9 @@ namespace AseTrader.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
