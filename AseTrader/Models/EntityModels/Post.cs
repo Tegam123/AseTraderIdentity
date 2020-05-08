@@ -16,7 +16,6 @@ namespace AseTrader.Models.EntityModels
         public string ApplicationUserId { get; set; }
 
         [DisplayName("User")]
-        //[ForeignKey(nameof(ApplicationUserId))]
         public User ApplicationUser { get; set; }
  
         [DisplayName("Post")]

@@ -19,7 +19,7 @@ namespace AseTrader.Controllers
             _context = context;
         }
 
-        // GET: Follows
+        // GET: Follows - Laver en liste af followers
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Follow.Include(f => f.Followers).Include(f => f.Following);
