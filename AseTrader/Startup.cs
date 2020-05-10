@@ -43,7 +43,10 @@ namespace AseTrader
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
 
             
-            services.AddDefaultIdentity<User>().
+            services.AddDefaultIdentity<User>(options =>
+                {
+                    options.SignIn.RequireConfirmedEmail = true;
+                }).
                 AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.Configure<IdentityOptions>(options =>
@@ -53,6 +56,8 @@ namespace AseTrader
                 options.Password.RequireUppercase = true;
                 options.Password.RequireLowercase = true;
                 options.Password.RequiredLength = 6;
+
+                options.SignIn.RequireConfirmedEmail = true;
             });
             
 
