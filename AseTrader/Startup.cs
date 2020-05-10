@@ -42,9 +42,9 @@ namespace AseTrader
             //services.AddDefaultIdentity<User>()
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
 
-
-
-            services.AddIdentity<User, IdentityRole>()
+            
+            services.AddDefaultIdentity<User>().
+                AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.Configure<IdentityOptions>(options =>
             {
@@ -54,6 +54,7 @@ namespace AseTrader
                 options.Password.RequireLowercase = true;
                 options.Password.RequiredLength = 6;
             });
+            
 
             services.AddAuthentication()
                  .AddGoogle(options =>
@@ -72,29 +73,11 @@ namespace AseTrader
                      options.ClientSecret = "bOdCGq]/OTtt4JF:4q7H5m-BL1]iIK.m";
                  });
 
-            //services.AddAuthentication(options =>
-            //{
-            //    options.DefaultAuthenticateScheme = "Jwt";
-            //    options.DefaultChallengeScheme = "Jwt";
-            //}).AddJwtBearer("Jwt", options =>
-            //{
-            //    options.TokenValidationParameters = new TokenValidationParameters
-            //    {
-            //        ValidAudience = "false",
-
-            //        ValidIssuer = "false",
-
-            //        ValidateIssuerSigningKey = true,
-
-            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSecretKey"])),
-
-            //        ValidateLifetime = true, //validate the expiration and not before values in the token
-            //        ClockSkew = TimeSpan.FromMinutes(5) //5 minute tolerance for the expiration date
-            //    };
-            //});
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+       
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

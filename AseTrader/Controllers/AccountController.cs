@@ -104,6 +104,10 @@ namespace AseTrader.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Email,
                     model.Password, true, false);
 
+                if (result.RequiresTwoFactor)
+                {
+                    
+                }
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index", "Home");
