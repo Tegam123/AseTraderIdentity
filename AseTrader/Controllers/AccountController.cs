@@ -103,7 +103,7 @@ namespace AseTrader.Controllers
                 foreach (var error in userCreationResult.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
-                }
+                } 
 
                 return BadRequest(ModelState);
             }
@@ -255,7 +255,7 @@ namespace AseTrader.Controllers
             }
 
             var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider,
-                info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+                info.ProviderKey, isPersistent: false, bypassTwoFactor: true); // TJEK IFT DAVID!!!!
 
             if (signInResult.Succeeded)
             {
@@ -282,7 +282,15 @@ namespace AseTrader.Controllers
 
                         _logger.Log(LogLevel.Warning, confirmationLink);
 
-                        var mailMessage = new MailMessage("brianstjernholm@hotmail.com", user.Email, confirmationLink, null);
+                        var mailMessage = new MailMessage("asetrader2@gmail.com", user.Email, "Confirmation email ASE Trader", confirmationLink);
+
+                        SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587); //(465)config for free email - not viable for many emails 
+
+                        smtpClient.UseDefaultCredentials = false;
+                        smtpClient.EnableSsl = true;
+                        smtpClient.Credentials = new NetworkCredential("asetrader2@gmail.com", "PassWord1!");
+
+                        smtpClient.Send(mailMessage);
 
                         ViewBag.ErrorTitle = "Registration succesful";
                         ViewBag.ErrorMessage = "Before you can Login, please confirm your " +
