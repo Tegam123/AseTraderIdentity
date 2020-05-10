@@ -184,10 +184,7 @@ namespace AseTrader.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Email,
                     model.Password, model.RememberMe, false); // changed (30/04) to accomodate RememberMe
 
-                if (result.RequiresTwoFactor)
-                {
-                    
-                }
+              
                 if (result.Succeeded)
                 {
                     if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))  // BS: added inner if statement (30/04)
@@ -196,6 +193,10 @@ namespace AseTrader.Controllers
                     }
                     else
                         return RedirectToAction("Index", "Home");
+                }
+                if (result.RequiresTwoFactor)
+                {
+                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl});
                 }
 
                 ModelState.AddModelError(string.Empty, "Invalid login attempt");
@@ -316,44 +317,6 @@ namespace AseTrader.Controllers
         }
 
 
-        //[HttpPost("Jwtlogin")]
-        //public async Task<IActionResult> JWTlogin([FromBody] LoginViewModel loginUser)
-        //{
-        //    var user = await _userManager.FindByEmailAsync(loginUser.Email);
-        //    if (user == null)
-        //    {
-        //        ModelState.AddModelError(string.Empty, "Invalid login");
-        //        return BadRequest(ModelState);
-        //    }
-
-        //    var passwordSignInResult = await _signInManager.CheckPasswordSignInAsync(user, loginUser.Password, false);
-        //    if (passwordSignInResult.Succeeded)
-        //    {
-        //        return new ObjectResult(GenerateToken(loginUser.Email));
-        //    }
-
-        //    return BadRequest("Invalid login");
-        //}
-
-
-
-
-        //private string GenerateToken(string username)
-        //{
-        //    var claims = new Claim[]
-        //    {
-        //        new Claim(ClaimTypes.Name, username),
-        //        new Claim(JwtRegisteredClaimNames.Nbf, new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString()),
-        //        new Claim(JwtRegisteredClaimNames.Exp, new DateTimeOffset(DateTime.Now.AddDays(1)).ToUnixTimeSeconds().ToString()),
-        //    };
-
-        //    var token = new JwtSecurityToken(
-        //        new JwtHeader(new SigningCredentials(
-        //            new SymmetricSecurityKey(Encoding.UTF8.GetBytes("the secret that needs to be at least 16 characeters long for HmacSha256")),
-        //            SecurityAlgorithms.HmacSha256)),
-        //        new JwtPayload(claims));
-
-        //    return new JwtSecurityTokenHandler().WriteToken(token);
-        //}
+       
     }
 }

@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using AseTrader.Models.EntityModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 
 namespace AseTrader
@@ -58,8 +59,10 @@ namespace AseTrader
                 options.Password.RequiredLength = 6;
 
                 options.SignIn.RequireConfirmedEmail = true;
+
             });
-            
+
+            services.ConfigureApplicationCookie(options => { options.LoginPath = new PathString("/account/login"); });
 
             services.AddAuthentication()
                  .AddGoogle(options =>
@@ -77,6 +80,8 @@ namespace AseTrader
                      options.ClientId = "c2080273-e878-4efc-a6ad-2fff61a43c9b";
                      options.ClientSecret = "bOdCGq]/OTtt4JF:4q7H5m-BL1]iIK.m";
                  });
+
+               
 
 
             services.AddControllersWithViews();
@@ -109,6 +114,8 @@ namespace AseTrader
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            
 
             app.UseEndpoints(endpoints =>
             {
