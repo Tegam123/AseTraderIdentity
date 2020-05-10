@@ -42,14 +42,13 @@ namespace AseTrader
             //services.AddDefaultIdentity<User>()
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
 
-
-
-            services.AddIdentity<User, IdentityRole>(options =>
+            
+            services.AddDefaultIdentity<User>(options =>
                 {
                     options.SignIn.RequireConfirmedEmail = true;
-                }).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders(); //added "AddDefaultTokenProviders() to inable tokens for 
-
-
+                }).
+                AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
             services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequireDigit = true;
@@ -60,6 +59,7 @@ namespace AseTrader
 
                 options.SignIn.RequireConfirmedEmail = true;
             });
+            
 
             services.AddAuthentication()
                  .AddGoogle(options =>
@@ -78,29 +78,11 @@ namespace AseTrader
                      options.ClientSecret = "bOdCGq]/OTtt4JF:4q7H5m-BL1]iIK.m";
                  });
 
-            //services.AddAuthentication(options =>
-            //{
-            //    options.DefaultAuthenticateScheme = "Jwt";
-            //    options.DefaultChallengeScheme = "Jwt";
-            //}).AddJwtBearer("Jwt", options =>
-            //{
-            //    options.TokenValidationParameters = new TokenValidationParameters
-            //    {
-            //        ValidAudience = "false",
-
-            //        ValidIssuer = "false",
-
-            //        ValidateIssuerSigningKey = true,
-
-            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSecretKey"])),
-
-            //        ValidateLifetime = true, //validate the expiration and not before values in the token
-            //        ClockSkew = TimeSpan.FromMinutes(5) //5 minute tolerance for the expiration date
-            //    };
-            //});
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+       
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

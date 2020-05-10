@@ -184,6 +184,10 @@ namespace AseTrader.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Email,
                     model.Password, model.RememberMe, false); // changed (30/04) to accomodate RememberMe
 
+                if (result.RequiresTwoFactor)
+                {
+                    
+                }
                 if (result.Succeeded)
                 {
                     if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))  // BS: added inner if statement (30/04)
