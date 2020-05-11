@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using AseTrader.Data;
 using AseTrader.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -25,6 +27,10 @@ namespace AseTrader.Areas.Identity.Pages.Account.Manage
 
         public string Username { get; set; }
 
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
+
         [TempData]
         public string StatusMessage { get; set; }
 
@@ -36,18 +42,34 @@ namespace AseTrader.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
+
         }
 
         private async Task LoadAsync(User user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
+
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
             Username = userName;
 
+            
+
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+
+                FirstName = user.FirstName,
+
+                LastName = user.LastName
+
+                
             };
         }
 
@@ -86,6 +108,22 @@ namespace AseTrader.Areas.Identity.Pages.Account.Manage
                     var userId = await _userManager.GetUserIdAsync(user);
                     throw new InvalidOperationException($"Unexpected error occurred setting phone number for user with ID '{userId}'.");
                 }
+            }
+            
+            if (Input.FirstName != user.FirstName)
+            {
+                //var store = new UserStore<User>(new ApplicationDbContext());
+                
+                user.FirstName = Input.FirstName;
+                await _userManager.UpdateAsync(user);
+            }
+
+            if (Input.LastName != user.LastName)
+            {
+                //var store = new UserStore<User>(new ApplicationDbContext());
+
+                user.LastName = Input.LastName;
+                await _userManager.UpdateAsync(user);
             }
 
             await _signInManager.RefreshSignInAsync(user);
