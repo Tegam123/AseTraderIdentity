@@ -16,18 +16,16 @@ namespace AseTrader.Controllers
 {
     public class ExternalLoginController : Controller
     {
-        private readonly ApplicationDbContext _context;
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<ExternalLoginController> _logger;
         private readonly UserManager<User> _userManager;
         public IConfiguration Configuration { get; set; }
 
-        public ExternalLoginController(ApplicationDbContext context, UserManager<User> userManager,
+        public ExternalLoginController(UserManager<User> userManager,
             SignInManager<User> signInManager,
             ILogger<ExternalLoginController> logger,
             IConfiguration configuration)
         {
-            _context = context;
             _signInManager = signInManager;
             _logger = logger;
             _userManager = userManager;
@@ -89,7 +87,7 @@ namespace AseTrader.Controllers
             }
 
             var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider,
-                info.ProviderKey, isPersistent: false, bypassTwoFactor: true); // TJEK IFT DAVID!!!!
+                info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
 
             if (signInResult.Succeeded)
             {

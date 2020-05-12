@@ -11,28 +11,16 @@ namespace AseTrader.Controllers
 {
     public class ConfirmEmailController : Controller
     {
-        private readonly ApplicationDbContext _context;
-        private readonly SignInManager<User> _signInManager;
-        private readonly ILogger<ConfirmEmailController> _logger;
         private readonly UserManager<User> _userManager;
         public IConfiguration Configuration { get; set; }
 
-        public ConfirmEmailController(ApplicationDbContext context, UserManager<User> userManager,
-            SignInManager<User> signInManager,
-            ILogger<ConfirmEmailController> logger,
+        public ConfirmEmailController(UserManager<User> userManager,
             IConfiguration configuration)
         {
-            _context = context;
-            _signInManager = signInManager;
-            _logger = logger;
             _userManager = userManager;
             Configuration = configuration;
         }
 
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
 
         [HttpGet]
         [AllowAnonymous]

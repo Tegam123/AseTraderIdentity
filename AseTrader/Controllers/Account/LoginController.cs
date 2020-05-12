@@ -13,29 +13,18 @@ namespace AseTrader.Controllers
 {
     public class LoginController : Controller
     {
-        private readonly ApplicationDbContext _context;
         private readonly SignInManager<User> _signInManager;
-        private readonly ILogger<LoginController> _logger;
         private readonly UserManager<User> _userManager;
         public IConfiguration Configuration { get; set; }
 
-        public LoginController(ApplicationDbContext context, UserManager<User> userManager,
+        public LoginController(UserManager<User> userManager,
             SignInManager<User> signInManager,
-            ILogger<LoginController> logger,
             IConfiguration configuration)
         {
-            _context = context;
             _signInManager = signInManager;
-            _logger = logger;
             _userManager = userManager;
             Configuration = configuration;
         }
-
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
-
 
         [HttpGet]
         [AllowAnonymous]
@@ -68,7 +57,6 @@ namespace AseTrader.Controllers
                     ModelState.AddModelError(string.Empty, "Email not yet confirmed");
                     return View("../Account/Login", model);
                 }
-                //--- 
 
                 var result = await _signInManager.PasswordSignInAsync(model.Email,
                     model.Password, model.RememberMe, false); // changed (30/04) to accomodate RememberMe

@@ -13,30 +13,18 @@ namespace AseTrader.Controllers
 {
     public class RegisterController : Controller
     {
-        private readonly ApplicationDbContext _context;
-        private readonly SignInManager<User> _signInManager;
         private readonly ILogger<RegisterController> _logger;
         private readonly UserManager<User> _userManager;
         public IConfiguration Configuration { get; set; }
 
-        public RegisterController(ApplicationDbContext context, UserManager<User> userManager,
-            SignInManager<User> signInManager,
+        public RegisterController(UserManager<User> userManager,
             ILogger<RegisterController> logger,
             IConfiguration configuration)
         {
-            _context = context;
-            _signInManager = signInManager;
             _logger = logger;
             _userManager = userManager;
             Configuration = configuration;
         }
-
-
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
-
 
 
         [HttpPost]
@@ -63,11 +51,6 @@ namespace AseTrader.Controllers
                                             new { userId = newUser.Id, token = token }, Request.Scheme); //added (30/04) building confirmation link/url
 
                     _logger.Log(LogLevel.Warning, confirmationLink);
-
-                    //if (user.Email.ToLower() == "davidbaekhoj@hotmail.com")
-                    //{
-                    //    //var adminClaim = new Claim("Admin",);
-                    //}
 
                     var mailMessage = new MailMessage("asetrader2@gmail.com", newUser.Email, "Confirmation email ASE Trader", confirmationLink); // actual message; inhereting from/Implements IDisposaple (https://docs.microsoft.com/en-us/dotnet/api/system.net.mail.mailmessage?view=netcore-3.1)
 
