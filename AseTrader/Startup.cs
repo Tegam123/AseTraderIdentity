@@ -65,21 +65,26 @@ namespace AseTrader
             services.ConfigureApplicationCookie(options => { options.LoginPath = new PathString("/account/login"); });
 
             services.AddAuthentication()
-                 .AddGoogle(options =>
-                 {
-                     options.ClientId = "5319443857-5riuvt4qjp7ghon0hgv34i3ll5r43hpa.apps.googleusercontent.com";
-                     options.ClientSecret = "O_U_5acXrEHX5Np_xSmfi7Y5";
-                 })
-                 .AddFacebook(options =>
-                 {
-                     options.AppId = "560845281478718";
-                     options.AppSecret = "50f311381de1eb4988f44fc4a054414d";
-                 })
-                 .AddMicrosoftAccount(options =>
-                 {
-                     options.ClientId = "c2080273-e878-4efc-a6ad-2fff61a43c9b";
-                     options.ClientSecret = "bOdCGq]/OTtt4JF:4q7H5m-BL1]iIK.m";
-                 });
+                .AddGoogle(options =>
+                {
+                    options.ClientId = "5319443857-5riuvt4qjp7ghon0hgv34i3ll5r43hpa.apps.googleusercontent.com";
+                    options.ClientSecret = "O_U_5acXrEHX5Np_xSmfi7Y5";
+                })
+                .AddFacebook(options =>
+                {
+                    options.AppId = "560845281478718";
+                    options.AppSecret = "50f311381de1eb4988f44fc4a054414d";
+                })
+                .AddTwitter(options =>
+                {
+                    options.ConsumerKey = "560845281478718";
+                    options.ConsumerSecret = "50f311381de1eb4988f44fc4a054414d";
+                })
+                 //.AddMicrosoftAccount(options =>
+                 //{
+                 //    options.ClientId = "c2080273-e878-4efc-a6ad-2fff61a43c9b";
+                 //    options.ClientSecret = "bOdCGq]/OTtt4JF:4q7H5m-BL1]iIK.m";
+                /*})*/;
 
                
 
