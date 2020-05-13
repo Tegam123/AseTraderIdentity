@@ -42,7 +42,7 @@ namespace AseTrader.Controllers
 
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
 
-            return new ChallengeResult(provider, properties);
+            return new ChallengeResult(provider, properties); //Implements IactionResult and redirects the user to the providers loginpage
         }
 
         [AllowAnonymous]
@@ -63,7 +63,10 @@ namespace AseTrader.Controllers
                 return View("../Account/Login", loginViewModel);
             }
 
+            //Henter logininfo
             var info = await _signInManager.GetExternalLoginInfoAsync();
+            //Info indeholder: Providerkey: to uniqly identify this user, Loginprovider"Google", Principal:System.security.Claims:claimsprincipal
+            //Principals claim indeholder bl.a. brugernavn, fornavn, efternavn og emailadresse
             if (info == null)
             {
                 ModelState.AddModelError(string.Empty, "Error loading external login information");
@@ -77,7 +80,7 @@ namespace AseTrader.Controllers
 
             if (email != null) //checking to see if we have recieved email from external provider
             {
-                user = await _userManager.FindByEmailAsync(email); // then find user
+                user = await _userManager.FindByEmailAsync(email); // then check if user have a local useraccount
 
                 if (user != null && !user.EmailConfirmed) // by now user is already authenticated by external provider
                 {
@@ -86,6 +89,7 @@ namespace AseTrader.Controllers
                 }
             }
 
+            //tjekker om vi kan signe bruger ind med oplysninger fra external provider - om bruger findes i dbo.AspNetUserLogins i vores database
             var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider,
                 info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
 
@@ -109,7 +113,7 @@ namespace AseTrader.Controllers
 
                         var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-                        var confirmationLink = Url.Action("ConfirmEmail", "ConfirmEmail",
+                        var confirmationLink = Url.Action("ConfirmEmail", "Register",
                             new { userId = user.Id, token = token }, Request.Scheme);
 
                         _logger.Log(LogLevel.Warning, confirmationLink);
@@ -130,7 +134,7 @@ namespace AseTrader.Controllers
                         return View("../Account/ErrorHandlingView");
                     }
 
-                    await _userManager.AddLoginAsync(user, info);
+                    await _userManager.AddLoginAsync(user, info); //tilføjer brugerens oplysninger til dbo.AspNetUserLogins med foreign key til asp.net.user table
                     await _signInManager.SignInAsync(user, isPersistent: false);
 
                     return LocalRedirect(returnUrl);
@@ -139,7 +143,7 @@ namespace AseTrader.Controllers
                 ViewBag.ErrorTitle = $"Email claim not recieved from: {info.LoginProvider}";
                 ViewBag.Errormassage = $"Please contact support on kildahl@support.dk";
 
-                return View("Error");
+                return View("../Account/ErrorHandlingView");
             }
         }
 

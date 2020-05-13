@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AseTrader.Data;
 using AseTrader.Models;
 using AseTrader.Models.dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -27,6 +28,14 @@ namespace AseTrader.Controllers
         }
 
 
+
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View("../Account/Register");
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel user)
         {
@@ -47,7 +56,7 @@ namespace AseTrader.Controllers
                 {
                     var token = await _userManager.GenerateEmailConfirmationTokenAsync(newUser); //added (30/04) generating confirmation token for user upon creation; next we build confirmation link/url
 
-                    var confirmationLink = Url.Action("ConfirmEmail", "ConfirmEmail",
+                    var confirmationLink = Url.Action("ConfirmEmail", "Register",
                                             new { userId = newUser.Id, token = token }, Request.Scheme); //added (30/04) building confirmation link/url
 
                     _logger.Log(LogLevel.Warning, confirmationLink);
@@ -85,11 +94,32 @@ namespace AseTrader.Controllers
             return View(user);
         }
 
-
         [HttpGet]
-        public IActionResult Register()
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
-            return View("../Account/Register");
+            if (userId == null || token == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                ViewBag.Errormessage = $"The User ID {userId} is invalid";
+                return View("../Account/NotFound");
+            }
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+
+            if (result.Succeeded)
+            {
+                return View("../Account/ConfirmEmail");
+            }
+
+            ViewBag.ErrorTitle = "Email cannot be confirmed";
+            return View("../Account/ErrorHandlingView");
         }
+
     }
 }
