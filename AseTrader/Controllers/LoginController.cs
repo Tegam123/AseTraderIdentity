@@ -85,7 +85,8 @@ namespace AseTrader.Controllers
                 }
                 if (result.RequiresTwoFactor)
                 {
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl });
+                    return RedirectToPage("/Areas/Identity/Pages/Account/LoginWith2fa", new { ReturnUrl = returnUrl });
+                    //return RedirectToPage("/Areas/Identity/Pages/Account/LoginWith2fa", new { ReturnUrl = returnUrl });
                 }
 
                 ModelState.AddModelError(string.Empty, "Invalid login attempt");

@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using AseTrader.Models.EntityModels;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
@@ -49,7 +50,8 @@ namespace AseTrader
                     options.SignIn.RequireConfirmedEmail = true;
                 }).
                 AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+
             services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequireDigit = true;
@@ -59,10 +61,9 @@ namespace AseTrader
                 options.Password.RequiredLength = 6;
 
                 options.SignIn.RequireConfirmedEmail = true;
-
             });
 
-            services.ConfigureApplicationCookie(options => { options.LoginPath = new PathString("/account/login"); });
+            //services.ConfigureApplicationCookie(options => { options.LoginPath = new PathString("/Login/login"); });
 
             services.AddAuthentication()
                 .AddGoogle(options =>
@@ -79,14 +80,25 @@ namespace AseTrader
                 {
                     options.ConsumerKey = "560845281478718";
                     options.ConsumerSecret = "50f311381de1eb4988f44fc4a054414d";
-                })
-                 //.AddMicrosoftAccount(options =>
-                 //{
-                 //    options.ClientId = "c2080273-e878-4efc-a6ad-2fff61a43c9b";
-                 //    options.ClientSecret = "bOdCGq]/OTtt4JF:4q7H5m-BL1]iIK.m";
-                /*})*/;
+                }).AddJwtBearer("Jwt", options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateAudience = false,
+                        //ValidAudience = "the audience you want to validate",
+                        ValidateIssuer = false,
+                        //ValidIssuer = "the isser you want to validate",
 
-               
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("the secret that needs to be at least 16 characeters long for HmacSha256")),
+
+                        ValidateLifetime = true, //validate the expiration and not before values in the token
+
+                        ClockSkew = TimeSpan.FromMinutes(5) //5 minute tolerance for the expiration date
+                    };
+                });
+
+
 
 
             services.AddControllersWithViews();

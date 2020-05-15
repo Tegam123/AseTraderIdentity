@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AseTrader.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200506075823_hvadskerderman")]
-    partial class hvadskerderman
+    [Migration("20200512124634_harproblemermedmigrationshvergang")]
+    partial class harproblemermedmigrationshvergang
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

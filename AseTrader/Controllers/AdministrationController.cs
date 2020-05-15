@@ -6,14 +6,17 @@ using AseTrader.Data;
 using AseTrader.Models;
 using AseTrader.Models.EntityModels;
 using AseTrader.Models.ViewModels;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AseTrader.Controllers
 {
-    
-    [Authorize(Roles = "Admin")]
+
+    //[Authorize(Roles = "Admin")]
+    //[Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = "Identity.Application")]
     public class AdministrationController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
