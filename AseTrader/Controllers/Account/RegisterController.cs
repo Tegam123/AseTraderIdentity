@@ -91,7 +91,7 @@ namespace AseTrader.Controllers
                 return BadRequest(ModelState);
             }
 
-            return View(user);
+            return View("../Account/Register", user);
         }
 
         [HttpGet]
