@@ -1,4 +1,17 @@
-﻿using System;
+﻿// ***********************************************************************
+// Assembly         : AseTrader
+// Author           : Mikkel
+// Created          : 04-24-2020
+//
+// Last Modified By : Mikkel
+// Last Modified On : 04-28-2020
+// ***********************************************************************
+// <copyright file="TradingController.cs" company="AseTrader">
+//     Copyright (c) . All rights reserved.
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -20,13 +33,29 @@ using Microsoft.AspNetCore.Identity;
 
 namespace AseTrader.Controllers
 {
-    
+
+    /// <summary>
+    /// Class TradingController.
+    /// Implements the <see cref="Microsoft.AspNetCore.Mvc.Controller" />
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.Controller" />
     public class TradingController : Controller
     {
 
+        /// <summary>
+        /// The context
+        /// </summary>
         private readonly ApplicationDbContext _context;
+        /// <summary>
+        /// The user manager
+        /// </summary>
         private readonly UserManager<User> _userManager;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TradingController"/> class.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="userManager">The user manager.</param>
         public TradingController(ApplicationDbContext context, [FromServices]UserManager<User> userManager)
         {
             _context = context;
@@ -54,6 +83,11 @@ namespace AseTrader.Controllers
 
 
         //private static string _accesstokens = "34bb3413-9fa3-407a-9087-19999d1e8e66";
+        /// <summary>
+        /// Tradings the reciever code.
+        /// </summary>
+        /// <param name="code">The code.</param>
+        /// <returns>IActionResult.</returns>
         public async Task<IActionResult> TradingRecieverCode([FromQuery] string code)
         {
             object? model = code;
@@ -104,23 +138,41 @@ namespace AseTrader.Controllers
             return View("Trading");
         }
 
+        /// <summary>
+        /// trading as an asynchronous operation.
+        /// </summary>
+        /// <param name="userManager">The user manager.</param>
+        /// <returns>IActionResult.</returns>
         public async Task<IActionResult> TradingAsync([FromServices]UserManager<User> userManager)
         {
             var user = await _userManager.GetUserAsync(User);
             return View();
         }
 
+        /// <summary>
+        /// Testers this instance.
+        /// </summary>
+        /// <returns>IActionResult.</returns>
         public IActionResult Tester()
         {
             return View();
         }
 
+        /// <summary>
+        /// Errors this instance.
+        /// </summary>
+        /// <returns>IActionResult.</returns>
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+        /// <summary>
+        /// Buys the si stocks dispatcher.
+        /// </summary>
+        /// <param name="builder">The builder.</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         [HttpPost]
         public bool Buy_SI_Stocks_dispatcher(StockBuilder builder)
         {
@@ -131,11 +183,21 @@ namespace AseTrader.Controllers
 
         }
 
+        /// <summary>
+        /// Gets the current user.
+        /// </summary>
+        /// <returns>User.</returns>
         private async Task<User> GetCurrentUser()
         {
             return await _userManager.GetUserAsync(HttpContext.User);
         }
 
+        /// <summary>
+        /// Buys the si stocks.
+        /// </summary>
+        /// <param name="sym">The sym.</param>
+        /// <param name="quantity">The quantity.</param>
+        /// <param name="price">The price.</param>
         public async Task Buy_SI_Stocks(string sym, int quantity, decimal price)
         {
             IBuyStock buyStock = new BuyStock();
@@ -146,6 +208,11 @@ namespace AseTrader.Controllers
             buyStock.BuyStocks_http(sym, quantity, price, currentUser.secret_accesstoken);
         }
 
+        /// <summary>
+        /// Sells the si stocks dispatcher.
+        /// </summary>
+        /// <param name="builder">The builder.</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         [HttpPost]
         public bool Sell_SI_Stocks_dispatcher(SellStockBuilder builder)
         {
@@ -156,6 +223,12 @@ namespace AseTrader.Controllers
 
         }
 
+        /// <summary>
+        /// Sells the si stocks.
+        /// </summary>
+        /// <param name="sym">The sym.</param>
+        /// <param name="quantity">The quantity.</param>
+        /// <param name="price">The price.</param>
         public async Task Sell_SI_Stocks(string sym, int quantity, decimal price)
         {
             ISellStock sellStock = new SellStock();
@@ -167,6 +240,11 @@ namespace AseTrader.Controllers
 
 
         //Test under here
+        /// <summary>
+        /// Sets the theme.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <returns>IActionResult.</returns>
         [HttpPost]
         public IActionResult SetTheme(string data)
         {
