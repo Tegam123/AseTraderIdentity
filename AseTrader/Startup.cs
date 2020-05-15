@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using AseTrader.Models.EntityModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 
 namespace AseTrader
@@ -42,9 +43,12 @@ namespace AseTrader
             //services.AddDefaultIdentity<User>()
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
 
-
-
-            services.AddIdentity<User, IdentityRole>()
+            
+            services.AddDefaultIdentity<User>(options =>
+                {
+                    options.SignIn.RequireConfirmedEmail = true;
+                }).
+                AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.Configure<IdentityOptions>(options =>
             {
@@ -53,45 +57,34 @@ namespace AseTrader
                 options.Password.RequireUppercase = true;
                 options.Password.RequireLowercase = true;
                 options.Password.RequiredLength = 6;
+
+                options.SignIn.RequireConfirmedEmail = true;
             });
 
+            services.ConfigureApplicationCookie(options => { options.LoginPath = new PathString("/account/login"); });
+
             services.AddAuthentication()
-                 .AddGoogle(options =>
-                 {
-                     options.ClientId = "5319443857-5riuvt4qjp7ghon0hgv34i3ll5r43hpa.apps.googleusercontent.com";
-                     options.ClientSecret = "O_U_5acXrEHX5Np_xSmfi7Y5";
-                 })
-                 .AddFacebook(options =>
-                 {
-                     options.AppId = "560845281478718";
-                     options.AppSecret = "50f311381de1eb4988f44fc4a054414d";
-                 })
-                 .AddMicrosoftAccount(options =>
-                 {
-                     options.ClientId = "c2080273-e878-4efc-a6ad-2fff61a43c9b";
-                     options.ClientSecret = "bOdCGq]/OTtt4JF:4q7H5m-BL1]iIK.m";
-                 });
+                .AddGoogle(options =>
+                {
+                    options.ClientId = Configuration["Authentication:Google:ClientId"];
+                    options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+                })
+                .AddFacebook(options =>
+                {
+                    options.AppId = Configuration["Authentication:Facebook:AppId"];
+                    options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+                })
+                .AddTwitter(options =>
+                {
+                    options.ConsumerKey = Configuration["Authentication:Twitter:ClientId"];
+                    options.ConsumerSecret = Configuration["Authentication:Twitter:ClientSecret"];
+                })
+                //.AddMicrosoftAccount(options =>
+                //{
+                //    options.ClientId = Configuration["Authentication:Microsoft:ClientId"];
+                //    options.ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"];
+                /*})*/;
 
-            //services.AddAuthentication(options =>
-            //{
-            //    options.DefaultAuthenticateScheme = "Jwt";
-            //    options.DefaultChallengeScheme = "Jwt";
-            //}).AddJwtBearer("Jwt", options =>
-            //{
-            //    options.TokenValidationParameters = new TokenValidationParameters
-            //    {
-            //        ValidAudience = "false",
-
-            //        ValidIssuer = "false",
-
-            //        ValidateIssuerSigningKey = true,
-
-            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSecretKey"])),
-
-            //        ValidateLifetime = true, //validate the expiration and not before values in the token
-            //        ClockSkew = TimeSpan.FromMinutes(5) //5 minute tolerance for the expiration date
-            //    };
-            //});
 
             services.AddControllersWithViews();
             services.AddRazorPages();

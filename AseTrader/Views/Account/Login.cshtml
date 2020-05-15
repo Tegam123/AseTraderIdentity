@@ -23,6 +23,18 @@
             <div class="form-group">
                 <input type="submit" value="Login" class="btn btn-primary" />
             </div>
+            
+            <div class="form-group">
+                @*<p>
+                    <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
+                </p>*@
+                <p>
+                    <a asp-controller="Register" asp-action="Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+                </p>
+                @*<p>
+                    <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
+                </p>*@
+            </div>
         </form>
     </div>
 
@@ -36,7 +48,7 @@
             }
             else
             {
-                <form method="post" asp-action="ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl">
+                <form method="post" asp-controller="ExternalLogin" asp-action="ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl">
                     <div>
                         @foreach (var provider in Model.ExternalLogins)
                         {

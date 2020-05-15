@@ -19,5 +19,7 @@ namespace AseTrader.Models.ViewModels
         public string ReturnUrl { get; set; }
 
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
+
+        public bool RememberMe { get; internal set; }
     }
 }
