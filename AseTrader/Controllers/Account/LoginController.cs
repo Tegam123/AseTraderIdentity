@@ -73,7 +73,8 @@ namespace AseTrader.Controllers
                 }
                 if (result.RequiresTwoFactor)
                 {
-                    return RedirectToPage("/Areas/Identity/Pages/Account/LoginWith2fa", new { ReturnUrl = returnUrl });
+                    return LocalRedirect("/Identity/Account/LoginWith2fa");
+                    //return RedirectToPage("/Areas/Identity/Pages/Account/LoginWith2fa", new { ReturnUrl = returnUrl });
                     //return RedirectToPage("/Areas/Identity/Pages/Account/LoginWith2fa", new { ReturnUrl = returnUrl });
                 }
 

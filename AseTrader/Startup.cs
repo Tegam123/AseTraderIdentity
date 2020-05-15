@@ -62,24 +62,28 @@ namespace AseTrader
                 options.SignIn.RequireConfirmedEmail = true;
             });
 
-            //services.ConfigureApplicationCookie(options => { options.LoginPath = new PathString("/Login/login"); });
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = new PathString("/Login/login");
+            });
 
             services.AddAuthentication()
-                .AddGoogle(options =>
-                {
-                    options.ClientId = Configuration["Authentication:Google:ClientId"];
-                    options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
-                })
-                .AddFacebook(options =>
-                {
-                    options.AppId = Configuration["Authentication:Facebook:AppId"];
-                    options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
-                })
-                .AddTwitter(options =>
-                {
-                    options.ConsumerKey = Configuration["Authentication:Twitter:ClientId"];
-                    options.ConsumerSecret = Configuration["Authentication:Twitter:ClientSecret"];
-                }).AddJwtBearer("Jwt", options =>
+                //.AddGoogle(options =>
+                //{
+                //    options.ClientId = Configuration["Authentication:Google:ClientId"];
+                //    options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+                //})
+                //.AddFacebook(options =>
+                //{
+                //    options.AppId = Configuration["Authentication:Facebook:AppId"];
+                //    options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+                //})
+                //.AddTwitter(options =>
+                //{
+                //    options.ConsumerKey = Configuration["Authentication:Twitter:ClientId"];
+                //    options.ConsumerSecret = Configuration["Authentication:Twitter:ClientSecret"];
+                //})
+                .AddJwtBearer("Jwt", options =>
                 {
                      options.TokenValidationParameters = new TokenValidationParameters
                 {
