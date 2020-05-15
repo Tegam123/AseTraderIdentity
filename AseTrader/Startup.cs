@@ -50,8 +50,7 @@ namespace AseTrader
                     options.SignIn.RequireConfirmedEmail = true;
                 }).
                 AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
-
+                .AddEntityFrameworkStores<ApplicationDbContext>();
             services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequireDigit = true;
@@ -68,13 +67,13 @@ namespace AseTrader
             services.AddAuthentication()
                 .AddGoogle(options =>
                 {
-                    options.ClientId = "5319443857-5riuvt4qjp7ghon0hgv34i3ll5r43hpa.apps.googleusercontent.com";
-                    options.ClientSecret = "O_U_5acXrEHX5Np_xSmfi7Y5";
+                    options.ClientId = Configuration["Authentication:Google:ClientId"];
+                    options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
                 })
                 .AddFacebook(options =>
                 {
-                    options.AppId = "560845281478718";
-                    options.AppSecret = "50f311381de1eb4988f44fc4a054414d";
+                    options.AppId = Configuration["Authentication:Facebook:AppId"];
+                    options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
                 })
                 .AddTwitter(options =>
                 {
@@ -97,14 +96,20 @@ namespace AseTrader
                         ClockSkew = TimeSpan.FromMinutes(5) //5 minute tolerance for the expiration date
                     };
                 });
+                    options.ConsumerKey = Configuration["Authentication:Twitter:ClientId"];
+                    options.ConsumerSecret = Configuration["Authentication:Twitter:ClientSecret"];
+                })
+                //.AddMicrosoftAccount(options =>
+                //{
+                //    options.ClientId = Configuration["Authentication:Microsoft:ClientId"];
+                //    options.ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"];
+                /*})*/;
 
 
 
 
             services.AddControllersWithViews();
             services.AddRazorPages();
-
-       
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -131,8 +136,6 @@ namespace AseTrader
 
             app.UseAuthentication();
             app.UseAuthorization();
-
-            
 
             app.UseEndpoints(endpoints =>
             {

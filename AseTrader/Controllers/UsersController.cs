@@ -55,42 +55,42 @@ namespace AseTrader.Controllers
             return View(user);
         }
 
-        // GET: Users/Delete/5
-        public async Task<IActionResult> Delete(string? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //// GET: Users/Delete/5
+        //public async Task<IActionResult> Delete(string? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            //Finder brugeren ud fra id'et.
-            var user = await _context.Users.FirstOrDefaultAsync(m => m.Id == id);
+        //    //Finder brugeren ud fra id'et.
+        //    var user = await _context.Users.FirstOrDefaultAsync(m => m.Id == id);
 
-            if (user == null)
-            {
-                return NotFound();
-            }
+        //    if (user == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(user);
-        }
+        //    return View(user);
+        //}
 
-        // POST: Users/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id)
-        {
-            //Finder brugeren
-            var user = await _context.Users.FindAsync(id);
+        //// POST: Users/Delete/5
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteConfirmed(long id)
+        //{
+        //    //Finder brugeren
+        //    var user = await _context.Users.FindAsync(id);
 
-            //Fjerner brugeren.
-            _context.Users.Remove(user);
+        //    //Fjerner brugeren.
+        //    _context.Users.Remove(user);
 
-            //Gemmer ændringer.
-            await _context.SaveChangesAsync();
+        //    //Gemmer ændringer.
+        //    await _context.SaveChangesAsync();
 
-            //Returnerer til action(Index).
-            return RedirectToAction(nameof(Index));
-        }
+        //    //Returnerer til action(Index).
+        //    return RedirectToAction(nameof(Index));
+        //}
 
 
         [HttpGet]
