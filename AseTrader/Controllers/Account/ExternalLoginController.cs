@@ -46,7 +46,7 @@ namespace AseTrader.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<ActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
 
