@@ -12,7 +12,7 @@
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
-        "JwtSecretKey": "DavidErSej",
+        "JwtSecretKey": "DenneTekstSkalVære16karakterelang",
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },

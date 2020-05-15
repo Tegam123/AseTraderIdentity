@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using AseTrader.Models.EntityModels;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
@@ -61,7 +62,7 @@ namespace AseTrader
                 options.SignIn.RequireConfirmedEmail = true;
             });
 
-            services.ConfigureApplicationCookie(options => { options.LoginPath = new PathString("/account/login"); });
+            //services.ConfigureApplicationCookie(options => { options.LoginPath = new PathString("/Login/login"); });
 
             services.AddAuthentication()
                 .AddGoogle(options =>
@@ -78,12 +79,30 @@ namespace AseTrader
                 {
                     options.ConsumerKey = Configuration["Authentication:Twitter:ClientId"];
                     options.ConsumerSecret = Configuration["Authentication:Twitter:ClientSecret"];
-                })
+                }).AddJwtBearer("Jwt", options =>
+                {
+                     options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateAudience = false,
+                    //ValidAudience = "the audience you want to validate",
+                    ValidateIssuer = false,
+                    //ValidIssuer = "the isser you want to validate",
+
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("the secret that needs to be at least 16 characeters long for HmacSha256")),
+
+                    ValidateLifetime = true, //validate the expiration and not before values in the token
+
+                    ClockSkew = TimeSpan.FromMinutes(5) //5 minute tolerance for the expiration date
+                  };
+                       });
                 //.AddMicrosoftAccount(options =>
                 //{
                 //    options.ClientId = Configuration["Authentication:Microsoft:ClientId"];
                 //    options.ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"];
                 /*})*/;
+
+
 
 
             services.AddControllersWithViews();
