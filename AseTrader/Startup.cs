@@ -77,28 +77,25 @@ namespace AseTrader
                 })
                 .AddTwitter(options =>
                 {
-                    options.ConsumerKey = "560845281478718";
-                    options.ConsumerSecret = "50f311381de1eb4988f44fc4a054414d";
-                }).AddJwtBearer("Jwt", options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateAudience = false,
-                        //ValidAudience = "the audience you want to validate",
-                        ValidateIssuer = false,
-                        //ValidIssuer = "the isser you want to validate",
-
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("the secret that needs to be at least 16 characeters long for HmacSha256")),
-
-                        ValidateLifetime = true, //validate the expiration and not before values in the token
-
-                        ClockSkew = TimeSpan.FromMinutes(5) //5 minute tolerance for the expiration date
-                    };
-                });
                     options.ConsumerKey = Configuration["Authentication:Twitter:ClientId"];
                     options.ConsumerSecret = Configuration["Authentication:Twitter:ClientSecret"];
-                })
+                }).AddJwtBearer("Jwt", options =>
+                {
+                     options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateAudience = false,
+                    //ValidAudience = "the audience you want to validate",
+                    ValidateIssuer = false,
+                    //ValidIssuer = "the isser you want to validate",
+
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("the secret that needs to be at least 16 characeters long for HmacSha256")),
+
+                    ValidateLifetime = true, //validate the expiration and not before values in the token
+
+                    ClockSkew = TimeSpan.FromMinutes(5) //5 minute tolerance for the expiration date
+                  };
+                       });
                 //.AddMicrosoftAccount(options =>
                 //{
                 //    options.ClientId = Configuration["Authentication:Microsoft:ClientId"];
