@@ -83,23 +83,18 @@ namespace AseTrader
                 //    options.ConsumerKey = Configuration["Authentication:Twitter:ClientId"];
                 //    options.ConsumerSecret = Configuration["Authentication:Twitter:ClientSecret"];
                 //})
-                .AddJwtBearer("Jwt", options =>
+                .AddJwtBearer(options =>
                 {
-                     options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateAudience = false,
-                    //ValidAudience = "the audience you want to validate",
-                    ValidateIssuer = false,
-                    //ValidIssuer = "the isser you want to validate",
-
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("the secret that needs to be at least 16 characeters long for HmacSha256")),
-
-                    ValidateLifetime = true, //validate the expiration and not before values in the token
-
-                    ClockSkew = TimeSpan.FromMinutes(5) //5 minute tolerance for the expiration date
-                  };
-                       });
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateAudience = false,
+                        ValidateIssuer = false,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSecretKey"])),
+                        ValidateLifetime = true, 
+                        ClockSkew = TimeSpan.FromMinutes(5)
+                    };
+                });
                 //.AddMicrosoftAccount(options =>
                 //{
                 //    options.ClientId = Configuration["Authentication:Microsoft:ClientId"];
