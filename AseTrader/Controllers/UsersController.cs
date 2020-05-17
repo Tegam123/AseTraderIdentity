@@ -29,7 +29,9 @@ namespace AseTrader.Controllers
             //Hvis der er skrevet i søgebaren, så søger den databasen igennem for dette.
             if (!String.IsNullOrEmpty(searchString))
             {
-                var users = _context.Users.Where(u => u.FirstName.Contains(searchString));   
+                var users = _context.Users.Where(u => u.FirstName.Contains(searchString));
+
+                return View(users);
             }
 
             //Returnerer brugerer.
