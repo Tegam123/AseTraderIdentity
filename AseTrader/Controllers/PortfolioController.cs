@@ -47,7 +47,7 @@ namespace AseTrader.Controllers
         {
             var _user = await userManager.GetUserAsync(User);
 
-            Portfolio p = new Portfolio(_user.secret_accesstoken);
+            IPortfolio p = new Portfolio(_user.secret_accesstoken);
 
             PortfolioMapper mapper = p.SeePortfolio();
 

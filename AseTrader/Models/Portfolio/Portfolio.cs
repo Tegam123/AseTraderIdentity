@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AseTrader.Models.Portfolio
 {
-    public class Portfolio
+    public class Portfolio : IPortfolio
     {
         private string _pToken;
 
