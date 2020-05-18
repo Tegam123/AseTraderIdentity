@@ -1,4 +1,5 @@
-﻿using Alpaca.Markets;
+﻿using Newtonsoft.Json;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,12 +9,28 @@ namespace AseTrader.Models.Portfolio
 {
     public class Portfolio
     {
-        public Portfolio(IReadOnlyList<IPosition> portList)
+        private string _pToken;
+
+        public Portfolio(string accesstoken)
         {
-            Positions = portList;
+            _pToken = accesstoken;
         }
 
-        public IReadOnlyList<IPosition> Positions { get; set; }
+        public PortfolioMapper SeePortfolio()
+        {
+            var client = new RestClient("https://paper-api.alpaca.markets/v2/positions");
+            client.Timeout = -1;
+            var request = new RestRequest(Method.GET);
+            request.AddHeader("Authorization", $"Bearer {_pToken}");
+            IRestResponse response = client.Execute(request);
+            var JsonObj_PortfolioData = JsonConvert.DeserializeObject(response.Content);
 
+            PortfolioMapper mapper = new PortfolioMapper();
+
+            mapper.TradingInfo = JsonObj_PortfolioData;
+
+            return mapper;
+
+        }
     }
 }
