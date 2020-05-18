@@ -26,15 +26,16 @@ namespace AseTrader.Controllers
         // GET: Users
         public async Task<IActionResult> Index(string searchString)
         {
-            //var users = from u in _context.User select u;
-            var users = from u in _context.Users select u;
-
+            //Hvis der er skrevet i søgebaren, så søger den databasen igennem for dette.
             if (!String.IsNullOrEmpty(searchString))
             {
-                users = users.Where(u => u.FirstName.Contains(searchString));   
+                var users = _context.Users.Where(u => u.FirstName.Contains(searchString));
+
+                return View(users);
             }
 
-            return View(await users.ToListAsync());
+            //Returnerer brugerer.
+            return View(await _context.Users.ToListAsync());
         }
 
         // GET: Users/Details/5
@@ -45,9 +46,9 @@ namespace AseTrader.Controllers
                 return NotFound();
             }
 
-            //var user = await _context.User
-            var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.Id == id);
+            //Finder brugeren ud fra id'et.
+            var user = await _context.Users.FirstOrDefaultAsync(m => m.Id == id);
+
             if (user == null)
             {
                 return NotFound();
@@ -56,78 +57,72 @@ namespace AseTrader.Controllers
             return View(user);
         }
 
-
-        //// POST: Users/Create
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("UserId,FirstName,LastName,Email,PwHash,AccountType")] User user)
+        //// GET: Users/Delete/5
+        //public async Task<IActionResult> Delete(string? id)
         //{
-        //    if (ModelState.IsValid)
+        //    if (id == null)
         //    {
-        //        _context.Add(user);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
+        //        return NotFound();
         //    }
+
+        //    //Finder brugeren ud fra id'et.
+        //    var user = await _context.Users.FirstOrDefaultAsync(m => m.Id == id);
+
+        //    if (user == null)
+        //    {
+        //        return NotFound();
+        //    }
+
         //    return View(user);
         //}
 
-
-        // GET: Users/Delete/5
-        public async Task<IActionResult> Delete(string? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            //var user = await _context.User
-            var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return View(user);
-        }
-
-        // POST: Users/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id)
-        {
-            //var user = await _context.User.FindAsync(id);
-            //_context.User.Remove(user);
-            var user = await _context.Users.FindAsync(id);
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        //private bool UserExists(string id)
+        //// POST: Users/Delete/5
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteConfirmed(long id)
         //{
-        //    //return _context.User.Any(e => e.UserId == id);
-        //    return _context.Users.Any(e => e.Id == id);
+        //    //Finder brugeren
+        //    var user = await _context.Users.FindAsync(id);
+
+        //    //Fjerner brugeren.
+        //    _context.Users.Remove(user);
+
+        //    //Gemmer ændringer.
+        //    await _context.SaveChangesAsync();
+
+        //    //Returnerer til action(Index).
+        //    return RedirectToAction(nameof(Index));
         //}
+
 
         [HttpGet]
         public async Task<IActionResult> Subscribe(string? id, [FromServices]UserManager<User> userManager)
         {
             if (ModelState.IsValid)
             {
-                var friend = await userManager.FindByIdAsync(id);
+                //Finder brugeren man ønsker at følge.
+                var userIWantToFollow = await userManager.FindByIdAsync(id);
+
+                //Finder brugeren der er logget ind.
                 var user = await userManager.GetUserAsync(User);
 
-                if (await _context.Follow.Where(m => m.followersId == friend.Id).Where(m => m.followingId == user.Id)
-                    .SingleOrDefaultAsync() == null)
+                //Tjekker at brugeren ikke er i ens follow list.
+                if (await _context.Follow.Where(m => m.followersId == userIWantToFollow.Id).Where(m => m.followingId == user.Id).SingleOrDefaultAsync() == null)
                 {
-                    var follower = new Follow() { Followers = friend, Following = user };
+                    //Opretter ny følger.
+                    var follower = new Follow() { Followers = userIWantToFollow, Following = user };
+
+                    //Tilføjer brugeren til databasen.
                     _context.Add(follower);
+
+                    //Gemmer ændringen i databasen.
                     await _context.SaveChangesAsync();
                 }
 
+                //Returnerer til action(Index) i users.
                 return RedirectToAction("Index", "Users");
             }
+            // Returnerer til action(Index) i users.
             return RedirectToAction("Index", "Users");
         }
 
@@ -136,23 +131,31 @@ namespace AseTrader.Controllers
         {
             if (ModelState.IsValid)
             {
-                var friend = await userManager.FindByIdAsync(id);
+                //Finder brugeren man ønsker at følge.
+                var userIWantToUnfollow = await userManager.FindByIdAsync(id);
+
+                //Finder brugeren der er logget ind.
                 var user = await userManager.GetUserAsync(User);
 
-                if (await _context.Follow.Where(m => m.followersId == friend.Id).Where(m => m.followingId == user.Id)
-                    .SingleOrDefaultAsync() == null)
+                //Tjekker om brugeren er i listen i forvejen.
+                if (await _context.Follow.Where(m => m.followersId == userIWantToUnfollow.Id).Where(m => m.followingId == user.Id).SingleOrDefaultAsync() == null)
                 {
                     return RedirectToAction("Index", "Users");
                 }
 
-                var follower = await _context.Follow.Where(m => m.followersId == friend.Id).Where(m => m.followingId == user.Id).SingleOrDefaultAsync();
-                //var test = await _context.Users.FindAsync(follower);
-                _context.Remove(follower);
+                //Finder brugeren man ikke vil følge længere ud fra id'et.
+                var stopFollowing = await _context.Follow.Where(m => m.followersId == userIWantToUnfollow.Id).Where(m => m.followingId == user.Id).SingleOrDefaultAsync();
 
+                //Fjerner brugeren fra databasen.
+                _context.Remove(stopFollowing);
+
+                //Gemmer ændringer i databasen.
                 await _context.SaveChangesAsync();
 
+                // Returnerer til action(Index) i users.
                 return RedirectToAction("Index", "Users");
             }
+            // Returnerer til action(Index) i users.
             return RedirectToAction("Index", "Users");
         }
     }

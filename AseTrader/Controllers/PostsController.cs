@@ -24,36 +24,38 @@ namespace AseTrader.Controllers
             _context = context;
         }
 
-        // GET: Posts
+        // GET: Posts - Laver en liste af posts
         public async Task<IActionResult> Index([FromServices]UserManager<User> userManager)
         {
+            //Returnerer brugeren af systemet.
             var user = await userManager.GetUserAsync(User);
-            var test = _context.Users.Where(t => t.Id == user.Id).Include(p => p.Following).First();
 
+            //Finder brugere brugeren følger.
+            var userFollow = _context.Users.Where(u => u.Id == user.Id).Include(user => user.Following).First();
+
+            //Finder mine posts.
+            var myPosts = _context.Posts.Where(mp => mp.ApplicationUserId == user.Id).ToList();
+
+            //Laver ny liste af posts da man ikke vil have alle posts i systemet, bare de posts fra dem brugeren følger.
             IEnumerable<Post> posts = new List<Post>();
 
+            //Smider mine posts i den nye liste.
+            posts = posts.Concat(myPosts);
 
-            var mineposts = _context.Posts.Where(p => p.ApplicationUserId == user.Id).ToList();
-
-            posts = posts.Concat(mineposts);
-            
-           
-            foreach(var followersPosts in test.Following)
+            //Smider followers posts i listen.
+            foreach (var followersPosts in userFollow.Following)
             {
                 posts = posts.Concat(_context.Posts.Where(p => p.ApplicationUserId == followersPosts.followersId).Include(p => p.ApplicationUser).ToList());
             }
 
+            //Sørger for at bruge PostsViewModel, så man både kan se og oprette posts på samme vindue.
+            var pvm = new PostsViewModel();
 
-            var vm = new PostsViewModel();
-            vm.Posts = posts.OrderByDescending(x => x.Date);
-            return View(vm);
-        }
+            //Sorterer posts i dato rækkefølge.
+            pvm.Posts = posts.OrderByDescending(p => p.Date);
 
-        // GET: Posts/Create
-        public IActionResult Create()
-        {
-            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Id");
-            return View();
+            //Returnerer mine og follwers posts.
+            return View(pvm);
         }
 
         // POST: Posts/Create
@@ -63,21 +65,40 @@ namespace AseTrader.Controllers
         {
             if (ModelState.IsValid)
             {
+                //Opretter et ny post.
                 var p = new Post();
+
+                //Sætter den indskrevne tekst = comment parameteren.
                 p.Comment = post.CurrentPost.Comment;
+
+                //Sætter dagens dato og tid = date parameteren.
                 p.Date = DateTime.Now;
+
+                //Finder brugeren der er logget ind.
                 p.ApplicationUser = await userManager.GetUserAsync(User);
+
+                //Tilføjer postet til databasen.
                 _context.Add(p);
+
+                //Gemmer ændringerne i databasen.
                 await _context.SaveChangesAsync();
+
+                //Returnerer os til action(Index).
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Id", post.CurrentPost.ApplicationUserId);
+            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Id", post.CurrentPost.ApplicationUserId); //Tjek om det bliver brugt.
 
-            var query = _context.Posts.Include(p => p.ApplicationUser);
-            var vm = new PostsViewModel();
-            vm.Posts = await query.ToListAsync();
+            //Finder brugerens posts.
+            var userPosts = _context.Posts.Include(p => p.ApplicationUser);
 
-            return View("Index", vm);
+            //Sørger for at bruge PostsViewModel.
+            var pvm = new PostsViewModel();
+
+            //Lægger posts over i pvm.
+            pvm.Posts = await userPosts.ToListAsync();
+
+            //Returnerer til index view.
+            return View("Index", pvm);
         }
 
         // GET: Posts/Delete/5
@@ -88,9 +109,9 @@ namespace AseTrader.Controllers
                 return NotFound();
             }
 
-            var post = await _context.Posts
-                .Include(p => p.ApplicationUser)
-                .FirstOrDefaultAsync(m => m.PostId == id);
+            //Finder den specifikke post ud fra postId'et og sletter den.
+            var post = await _context.Posts.Include(p => p.ApplicationUser).FirstOrDefaultAsync(m => m.PostId == id);
+
             if (post == null)
             {
                 return NotFound();
@@ -104,15 +125,17 @@ namespace AseTrader.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
+            //Finder post i databasen.
             var post = await _context.Posts.FindAsync(id);
-            _context.Posts.Remove(post);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
 
-        private bool PostExists(long id)
-        {
-            return _context.Posts.Any(e => e.PostId == id);
+            //Sletter fra databasen.
+            _context.Posts.Remove(post);
+
+            //Gemmer ændringen.
+            await _context.SaveChangesAsync();
+
+            //Returnerer os til action(Index).
+            return RedirectToAction(nameof(Index));
         }
     }
 }

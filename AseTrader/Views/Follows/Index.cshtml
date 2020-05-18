@@ -6,39 +6,23 @@
 
 <h1>People i follow</h1>
 
-@*<p>
-    <a asp-action="Create">Create New</a>
-</p>*@
 <table class="table">
     <thead>
         <tr>
             <th>
                 Name
             </th>
-            @*<th>
-                @Html.DisplayNameFor(model => model.Following.FirstName)
-                @Html.DisplayNameFor(model => model.Following.LastName)
-            </th>*@
-            <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+    @foreach (var item in Model)
+    {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Followers.FirstName)
                 @Html.DisplayFor(modelItem => item.Followers.LastName)
             </td>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.Following.FirstName)
-                @Html.DisplayFor(modelItem => item.Following.LastName)
-            </td>*@
-            @*<td>
-                <a asp-action="Edit" asp-route-id="@item.FollowId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.FollowId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.FollowId">Delete</a>
-            </td>*@
         </tr>
-}
+    }
     </tbody>
 </table>

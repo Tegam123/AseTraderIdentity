@@ -11,11 +11,11 @@
 
 <table class="table" id="table">
     <thead>
-        <tr>
-            <th>Stocks</th>
-            <th>Quantity</th>
-            <th>Current price</th>
-        </tr>
+    <tr>
+        <th>Stocks</th>
+        <th>Quantity</th>
+        <th>Current price</th>
+    </tr>
     </thead>
     <tbody>
 
@@ -23,6 +23,8 @@
 
     </tbody>
 </table>
+
+<p id="profitshow"></p>
 
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
@@ -43,12 +45,13 @@
         let Symbol_stock = [];
         let Qty = [];
         let Current_price = [];
-
+        let profit = 0;
 
         for (let item of obj) {
             Symbol_stock.push(item.symbol);
             Qty.push(item.qty);
             Current_price.push(item.current_price);
+            profit += (item.qty * item.current_price);
         }
 
         var arrayLength = parseInt(Symbol_stock.length);
@@ -56,6 +59,9 @@
         for (i = 0; i < arrayLength; i++) {
             $("#table tbody").append("<tr><td>" + Symbol_stock[i] + "</td>" + "<td>" + Qty[i] + "</td>" + "<td>" + Current_price[i] + "</td></tr>");
         }
+
+        
+        document.getElementById('profitshow').innerHTML = profit.toFixed(2) + "$ Profit/loss";
 
         setTimeout("window.location.reload();", 5000);
 

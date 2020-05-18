@@ -17,8 +17,6 @@ namespace AseTrader.Models.BuyStock
                 TimeInForce.Day, price);
         }
 
-    
-
         public void BuyStocks_http(string sym, int quantity, decimal price, string accesstoken)
         {
             var client = new RestClient("https://paper-api.alpaca.markets/v2/orders");

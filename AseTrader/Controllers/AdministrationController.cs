@@ -6,26 +6,29 @@ using AseTrader.Data;
 using AseTrader.Models;
 using AseTrader.Models.EntityModels;
 using AseTrader.Models.ViewModels;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AseTrader.Controllers
 {
-    [Authorize(Roles = "Admin")]
+
+    //[Authorize(Roles = "Admin")]
+    //[Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = "Identity.Application")]
     public class AdministrationController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<User> _userManager;
-        private readonly ApplicationDbContext _context;
+        //private readonly ApplicationDbContext _context;
 
         public AdministrationController(RoleManager<IdentityRole> roleManager,
-                                        UserManager<User> userManager,
-                                        ApplicationDbContext context)
+                                        UserManager<User> userManager)
         {
             _roleManager = roleManager;
             _userManager = userManager;
-            _context = context;
+           // _context = context;
         }
 
 
@@ -35,6 +38,7 @@ namespace AseTrader.Controllers
             return View();
         }
 
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> CreateRole(CreateRoleViewModel model)
         {
@@ -49,7 +53,7 @@ namespace AseTrader.Controllers
 
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Home", "Users");
+                    return RedirectToAction("ListRoles", "Administration");
                 }
 
                 foreach (IdentityError error in result.Errors)
@@ -130,6 +134,35 @@ namespace AseTrader.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> DeleteRole(string RoleId)
+        {
+
+            var role = await _roleManager.FindByIdAsync(RoleId);
+
+            if (role == null)
+            {
+                ViewBag.ErrorMessage = $"Role not found";
+                return View("NotFound");
+            }
+            else
+            {
+                var result = await _roleManager.DeleteAsync(role);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("ListRoles");
+                }
+
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+            }
+
+
+            return View("ListRoles");
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> EditUserInRole(string roleId)
@@ -150,7 +183,7 @@ namespace AseTrader.Controllers
                 var userRoleViewModel = new UserRoleViewModel
                 {
                     UserId = user.Id,
-                    UserName = user.FirstName +" "+  user.LastName,
+                    UserName = user.UserName,
                 };
 
                 if (await _userManager.IsInRoleAsync(user, role.Name))
