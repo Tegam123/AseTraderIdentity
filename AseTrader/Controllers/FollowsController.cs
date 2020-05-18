@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AseTrader.Data;
+using AseTrader.Models;
 using AseTrader.Models.EntityModels;
+using Microsoft.AspNetCore.Identity;
 
 namespace AseTrader.Controllers
 {
@@ -20,10 +22,13 @@ namespace AseTrader.Controllers
         }
 
         // GET: Follows - Laver en liste af followers
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromServices]UserManager<User> userManager)
         {
-            var applicationDbContext = _context.Follow.Include(f => f.Followers).Include(f => f.Following);
-            return View(await applicationDbContext.ToListAsync());
+            var user = await userManager.GetUserAsync(User);
+
+            var following = _context.Follow.Where(mp => mp.followingId == user.Id).Include(f => f.Followers).ToList();
+
+            return View(following);
         }
 
 
