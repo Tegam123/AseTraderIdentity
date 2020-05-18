@@ -103,8 +103,6 @@ namespace AseTrader
                 /*})*/;
 
 
-
-
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
