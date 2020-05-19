@@ -69,21 +69,21 @@ namespace AseTrader
             });
 
             services.AddAuthentication()
-                //.AddGoogle(options =>
-                //{
-                //    options.ClientId = Configuration["Authentication:Google:ClientId"];
-                //    options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
-                //})
-                //.AddFacebook(options =>
-                //{
-                //    options.AppId = Configuration["Authentication:Facebook:AppId"];
-                //    options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
-                //})
-                //.AddTwitter(options =>
-                //{
-                //    options.ConsumerKey = Configuration["Authentication:Twitter:ClientId"];
-                //    options.ConsumerSecret = Configuration["Authentication:Twitter:ClientSecret"];
-                //})
+                .AddGoogle(options =>
+                {
+                    options.ClientId = "940235020309-h57ssqflbbvs5t83ai0jav5gk5n3l624.apps.googleusercontent.com" //Configuration["Authentication:Google:ClientId"];
+                    options.ClientSecret = "c-7kLG7unXQs30PetvdBglib"; //Configuration["Authentication:Google:ClientSecret"];
+                })
+                .AddFacebook(options =>
+                {
+                    options.AppId = "182773716278040"; //Configuration["Authentication:Facebook:AppId"];
+                    options.AppSecret = "0ff7415188f20cdccc13abf9a7e08437"; //Configuration["Authentication:Facebook:AppSecret"];
+                })
+                .AddTwitter(options =>
+                {
+                    options.ConsumerKey = "182773716278040"; //Configuration["Authentication:Twitter:ClientId"];
+                    options.ConsumerSecret = "0ff7415188f20cdccc13abf9a7e08437"; //Configuration["Authentication:Twitter:ClientSecret"];
+                })
                 .AddJwtBearer("Jwt", options =>
                 {
                     options.TokenValidationParameters = new TokenValidationParameters()
