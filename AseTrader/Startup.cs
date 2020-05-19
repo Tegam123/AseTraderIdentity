@@ -71,7 +71,7 @@ namespace AseTrader
             services.AddAuthentication()
                 .AddGoogle(options =>
                 {
-                    options.ClientId = "940235020309-h57ssqflbbvs5t83ai0jav5gk5n3l624.apps.googleusercontent.com" //Configuration["Authentication:Google:ClientId"];
+                    options.ClientId = "940235020309-h57ssqflbbvs5t83ai0jav5gk5n3l624.apps.googleusercontent.com"; //Configuration["Authentication:Google:ClientId"];
                     options.ClientSecret = "c-7kLG7unXQs30PetvdBglib"; //Configuration["Authentication:Google:ClientSecret"];
                 })
                 .AddFacebook(options =>
