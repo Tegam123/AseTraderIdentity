@@ -51,7 +51,7 @@
             Symbol_stock.push(item.symbol);
             Qty.push(item.qty);
             Current_price.push(item.current_price);
-            profit += (item.qty * item.current_price);
+            profit += (item.market_value - item.cost_basis);
         }
 
         var arrayLength = parseInt(Symbol_stock.length);
