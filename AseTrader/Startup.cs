@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -101,15 +102,22 @@ namespace AseTrader
                 //    options.ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"];
                 /*})*/;
 
-
-
+                var _userManager = services.BuildServiceProvider().GetService<UserManager<User>>();
+            services.AddAuthorization(options =>
+                {
+                    options.AddPolicy("IsAdmin",
+                        policy => policy.RequireClaim("Admin"));
+                });
 
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, 
+            ApplicationDbContext context,
+            UserManager<User> userManager,
+            RoleManager<IdentityRole> roleManager)
         {
             if (env.IsDevelopment())
             {
@@ -140,6 +148,8 @@ namespace AseTrader
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
+            //SeedData.Initialize(context, userManager, roleManager).Wait();
         }
         //private string[] roles = new[] { "User", "Manager", "Administrator" };
         //private async Task InitializeRoles(RoleManager<IdentityRole> roleManager)

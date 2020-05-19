@@ -49,19 +49,14 @@ namespace AseTrader.Controllers.API
 
         
 
-        [HttpGet("GetCustomer")]
+        [HttpGet("Test")]
         public List<string> GetCustomer()
         {
             return new List<string>(){ "Test","Test1"};
 
         }
 
-        [HttpGet("GetCustomer1")]
-        public List<string> GetCustomer1()
-        {
-            return new List<string>() { "Tes11111t", "Test1" };
-
-        }
+        
 
 
         [AllowAnonymous]
