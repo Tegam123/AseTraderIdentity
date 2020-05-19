@@ -31,7 +31,7 @@ namespace AseTrader.Controllers
             var user = await userManager.GetUserAsync(User);
 
             //Finder brugere brugeren følger.
-            var userFollow = _context.Users.Where(user => user.Id == user.Id).Include(user => user.Following).First();
+            var userFollow = _context.Users.Where(u => u.Id == user.Id).Include(user => user.Following).First();
 
             //Finder mine posts.
             var myPosts = _context.Posts.Where(mp => mp.ApplicationUserId == user.Id).ToList();

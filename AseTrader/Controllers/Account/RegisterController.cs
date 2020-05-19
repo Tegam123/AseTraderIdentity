@@ -50,7 +50,7 @@ namespace AseTrader.Controllers
 
                 };
 
-                var userCreationResult = await _userManager.CreateAsync(newUser, user.Password);
+                var userCreationResult = await _userManager.CreateAsync(newUser, user.Password); //  for added security password is not saved
 
                 if (userCreationResult.Succeeded)
                 {
@@ -71,7 +71,7 @@ namespace AseTrader.Controllers
 
                     smtpClient.Send(mailMessage);
 
-                    ViewBag.ErrorTitle = "Registration succesful";
+                    ViewBag.ErrorTitle = "Registration successful";
                     ViewBag.ErrorMessage = "Before you can Login, please confirm your " +
                                            "email, by clicking on the confirmation link we have emailed you";
                     return View("../Account/ErrorHandlingView");
