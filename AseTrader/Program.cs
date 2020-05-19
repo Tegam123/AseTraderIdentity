@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AseTrader.Data;
 using AseTrader.Models;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,7 +25,10 @@ namespace AseTrader
 
                 try
                 {
-                    SeedData.Initialize(services);
+                    var _userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+                    var _roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                    var applicationDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                    SeedData.Initialize(applicationDbContext,_userManager,_roleManager).Wait();
                 }
                 catch (Exception ex)
                 {

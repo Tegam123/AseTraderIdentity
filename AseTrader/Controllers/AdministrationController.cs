@@ -16,7 +16,7 @@ namespace AseTrader.Controllers
 
     //[Authorize(Roles = "Admin")]
     //[Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
-    [Authorize(AuthenticationSchemes = "Identity.Application")]
+    [Authorize(Roles = "Admin")]
     public class AdministrationController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -71,7 +71,7 @@ namespace AseTrader.Controllers
         public IActionResult ListRoles()
         {
             var roles = _roleManager.Roles;
-            return View(roles);
+            return View("ListRoles",roles);
 
         }
 
