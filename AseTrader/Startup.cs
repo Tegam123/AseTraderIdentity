@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -85,34 +86,38 @@ namespace AseTrader
                 })
                 .AddJwtBearer("Jwt", options =>
                 {
-                     options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateAudience = false,
-                    //ValidAudience = "the audience you want to validate",
-                    ValidateIssuer = false,
-                    //ValidIssuer = "the isser you want to validate",
-
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("the secret that needs to be at least 16 characeters long for HmacSha256")),
-
-                    ValidateLifetime = true, //validate the expiration and not before values in the token
-
-                    ClockSkew = TimeSpan.FromMinutes(5) //5 minute tolerance for the expiration date
-                  };
-                       });
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateAudience = false,
+                        ValidateIssuer = false,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSecretKey"])),
+                        ValidateLifetime = true, 
+                        ClockSkew = TimeSpan.FromMinutes(5)
+                    };
+                });
                 //.AddMicrosoftAccount(options =>
                 //{
                 //    options.ClientId = Configuration["Authentication:Microsoft:ClientId"];
                 //    options.ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"];
                 /*})*/;
 
+                var _userManager = services.BuildServiceProvider().GetService<UserManager<User>>();
+            services.AddAuthorization(options =>
+                {
+                    options.AddPolicy("IsAdmin",
+                        policy => policy.RequireClaim("Admin"));
+                });
 
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, 
+            ApplicationDbContext context,
+            UserManager<User> userManager,
+            RoleManager<IdentityRole> roleManager)
         {
             if (env.IsDevelopment())
             {
@@ -143,6 +148,8 @@ namespace AseTrader
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
+            //SeedData.Initialize(context, userManager, roleManager).Wait();
         }
         //private string[] roles = new[] { "User", "Manager", "Administrator" };
         //private async Task InitializeRoles(RoleManager<IdentityRole> roleManager)
