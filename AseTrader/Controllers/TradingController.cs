@@ -28,6 +28,8 @@ using AseTrader.Models.Alpaca_dependency;
 using Microsoft.AspNetCore.Authorization;
 using AseTrader.Data;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Internal;
+using System.Linq;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -174,12 +176,17 @@ namespace AseTrader.Controllers
         /// <param name="builder">The builder.</param>
         /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         [HttpPost]
-        public bool Buy_SI_Stocks_dispatcher(StockBuilder builder)
+        public ActionResult Buy_SI_Stocks_dispatcher(StockBuilder builder)
         {
-            
-            Buy_SI_Stocks(builder.stock_symbol, builder.quantity, builder.price);
+            var containsInt = builder.stock_symbol.Any(char.IsDigit);
 
-            return builder != null;
+            if (builder.stock_symbol is string && builder.quantity is int && builder.price is decimal && containsInt == false && builder.quantity != 0 && builder.price != 0)
+            {
+                Buy_SI_Stocks(builder.stock_symbol, builder.quantity, builder.price, builder.email);
+                return Ok();
+            }
+
+            return BadRequest();
 
         }
 
@@ -187,9 +194,9 @@ namespace AseTrader.Controllers
         /// Gets the current user.
         /// </summary>
         /// <returns>User.</returns>
-        private async Task<User> GetCurrentUser()
+        private async Task<User> GetCurrentUser(string email)
         {
-            return await _userManager.GetUserAsync(HttpContext.User);
+            return await _userManager.FindByEmailAsync(email);
         }
 
         /// <summary>
@@ -198,12 +205,12 @@ namespace AseTrader.Controllers
         /// <param name="sym">The sym.</param>
         /// <param name="quantity">The quantity.</param>
         /// <param name="price">The price.</param>
-        public async Task Buy_SI_Stocks(string sym, int quantity, decimal price)
+        public async Task Buy_SI_Stocks(string sym, int quantity, decimal price, string email)
         {
             IBuyStock buyStock = new BuyStock();
             IAlpacaClient alpacaClient = new AlpacaClient();
 
-            var currentUser = await GetCurrentUser();
+            var currentUser = await GetCurrentUser(email);
 
             buyStock.BuyStocks_http(sym, quantity, price, currentUser.secret_accesstoken);
         }
@@ -214,12 +221,18 @@ namespace AseTrader.Controllers
         /// <param name="builder">The builder.</param>
         /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         [HttpPost]
-        public bool Sell_SI_Stocks_dispatcher(SellStockBuilder builder)
+        public ActionResult Sell_SI_Stocks_dispatcher(SellStockBuilder builder)
         {
-          
-            Sell_SI_Stocks(builder.stock_symbol, builder.quantity, builder.price);
 
-            return builder != null;
+            var containsInt = builder.stock_symbol.Any(char.IsDigit);
+
+            if (builder.stock_symbol is string && builder.quantity is int && builder.price is decimal && containsInt == false && builder.quantity != 0 && builder.price != 0)
+            {
+                Sell_SI_Stocks(builder.stock_symbol, builder.quantity, builder.price, builder.email);
+                return Ok();
+            }
+
+            return BadRequest();
 
         }
 
@@ -229,11 +242,11 @@ namespace AseTrader.Controllers
         /// <param name="sym">The sym.</param>
         /// <param name="quantity">The quantity.</param>
         /// <param name="price">The price.</param>
-        public async Task Sell_SI_Stocks(string sym, int quantity, decimal price)
+        public async Task Sell_SI_Stocks(string sym, int quantity, decimal price, string email)
         {
             ISellStock sellStock = new SellStock();
 
-            var currentUser = await GetCurrentUser();
+            var currentUser = await GetCurrentUser(email);
 
             sellStock.SellStocks_http(sym, quantity, price, currentUser.secret_accesstoken);
         }

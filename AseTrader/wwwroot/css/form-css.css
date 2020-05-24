@@ -26,7 +26,7 @@ a {
     left: 250px;
 }
 
-form {
+.Tform {
     position: absolute;
     text-align: center;
     background: #fff;
@@ -129,7 +129,7 @@ button {
             color: #fff;
         }
 
-input {
+.Tinput {
     border: none;
     border-bottom: 1px solid #ffc185;
     width: 85%;

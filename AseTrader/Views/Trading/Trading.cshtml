@@ -20,99 +20,104 @@
     }
 </head>
 <body>
-@{
-    var user = await UserManager.GetUserAsync(User);
+    @{
+        var user = await UserManager.GetUserAsync(User);
 
-    if (string.IsNullOrEmpty(user.secret_accesstoken))
-    {
-        <button ID="alpaca_auth" type="button">Authorize Alpaca</button>
+        if (string.IsNullOrEmpty(user.secret_accesstoken))
+        {
+            <button ID="alpaca_auth" type="button">Authorize Alpaca</button>
+        }
+        else
+        {
+            <h1>You are already authorized</h1>
+        }
     }
-    else
-    {
-        <h1>You are already authorized</h1>
-    }
-}
 
 
-<div class="container">
+    <div class="container">
 
-    <form class="signUp">
-        <h3>Buy Stock</h3>
-        <p>
-            In the fields below, just<br>
-            enter your stock, quantity and price.
-        </p><br>
-        <input class="w100" type="text" placeholder="Stock Symbol" reqired autocomplete="off" id="fname" name="fname"/>
-        <input type="text" id="lname" name="lname" placeholder="Quantity" reqired/>
-        <input type="text" id="pname" name="pname" placeholder="Price" reqired/>
-        <button class="form-btn sx log-in" type="button">Sell</button>
-        <button ID="btn_buy_stock_real_test" class="form-btn dx" type="submit">Buy</button>
-    </form>
-    <form class="signIn">
-        <h3>Sell Stock </h3>
-        <p>
-            In the fields below, just<br>
-            enter your stock, quantity and price.
-        </p><br>
-        <input class="w100" type="text" placeholder="Stock Symbol" reqired autocomplete="off" id="fname_sell" name="fname_sell"/>
-        <input type="text" id="lname_sell" name="lname_sell" placeholder="Quantity" reqired/>
-        <input type="text" id="pname_sell" name="pname_sell" placeholder="Price" reqired/>
-        <button class="form-btn sx back" type="button">Buy</button>
-        <button ID="btn_sell_stock_real_test" class="form-btn dx" type="submit">Sell</button>
-    </form>
-</div>
-
-<!--
-<div class="column">
-    <div class="container_forms">
-        <form ID="my_stock" class="buystock-100-form validate-form">
-            <input class="w100" type="text" id="fname" name="fname" placeholder="Write stock symbol"><br>
-            <input type="text" id="lname" name="lname" placeholder="Quantity (How many Stocks to be bought)"><br>
-            <input id="pname" type="text" name="pname" placeholder="Price for stock in $"><br>
-            <input class="form-btn sx log-in" ID="btn_buy_stock_real_test" type="submit" value="Buy">
-            <input class="form-btn dx" ID="btn_sell_stock_real_test" type="submit" value="Buy">
+        <form id="formBuyRes" class="signUp Tform">
+            <h3>Buy Stock</h3>
+            <p>
+                In the fields below, just<br>
+                enter your stock, quantity and price.
+            </p><br>
+            <input class="w100 Tinput" type="text" placeholder="Stock Symbol" reqired autocomplete="off" id="fname" name="fname" />
+            <input class="Tinput" type="text" id="lname" name="lname" placeholder="Quantity" reqired />
+            <input class="Tinput" type="text" id="pname" name="pname" placeholder="Price" reqired />
+            <button class="form-btn sx log-in" type="button">Sell</button>
+            <button ID="btn_buy_stock_real_test" class="form-btn dx" type="submit">Buy</button>
+        </form>
+        <form id="formSellRes" class="signIn Tform">
+            <h3>Sell Stock </h3>
+            <p>
+                In the fields below, just<br>
+                enter your stock, quantity and price.
+            </p><br>
+            <input class="w100 Tinput" type="text" placeholder="Stock Symbol" reqired autocomplete="off" id="fname_sell" name="fname_sell" />
+            <input class="Tinput" type="text" id="lname_sell" name="lname_sell" placeholder="Quantity" reqired />
+            <input class="Tinput" type="text" id="pname_sell" name="pname_sell" placeholder="Price" reqired />
+            <button class="form-btn sx back" type="button">Buy</button>
+            <button ID="btn_sell_stock_real_test" class="form-btn dx" type="submit">Sell</button>
         </form>
     </div>
-</div>
 
--->
-<!-- TradingView Widget BEGIN -->
-
-<div class="notmove" align="right">
-    <div class="tradingview-widget-container" align="right">
-        <div id="tradingview_773e5"></div>
-        <div class="tradingview-widget-copyright">
-            <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-            <script type="text/javascript">
-                new TradingView.widget(
-                    {
-                        "width": 880,
-                        "height": 550,
-                        "symbol": "NASDAQ:AAPL",
-                        "interval": "D",
-                        "timezone": "Etc/UTC",
-                        "theme": "dark",
-                        "style": "1",
-                        "locale": "en",
-                        "toolbar_bg": "#f1f3f6",
-                        "enable_publishing": false,
-                        "hide_side_toolbar": false,
-                        "allow_symbol_change": true,
-                        "details": true,
-                        "container_id": "tradingview_773e5"
-                    }
-                );
-            </script>
+    <!--
+    <div class="column">
+        <div class="container_forms">
+            <form ID="my_stock" class="buystock-100-form validate-form">
+                <input class="w100" type="text" id="fname" name="fname" placeholder="Write stock symbol"><br>
+                <input type="text" id="lname" name="lname" placeholder="Quantity (How many Stocks to be bought)"><br>
+                <input id="pname" type="text" name="pname" placeholder="Price for stock in $"><br>
+                <input class="form-btn sx log-in" ID="btn_buy_stock_real_test" type="submit" value="Buy">
+                <input class="form-btn dx" ID="btn_sell_stock_real_test" type="submit" value="Buy">
+            </form>
         </div>
     </div>
-</div>
 
-<!-- TradingView Widget END -->
+    -->
+    <!-- TradingView Widget BEGIN -->
 
+    <div class="notmove" align="right">
+        <div class="tradingview-widget-container" align="right">
+            <div id="tradingview_773e5"></div>
+            <div class="tradingview-widget-copyright">
+                <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+                <script type="text/javascript">
+                    new TradingView.widget(
+                        {
+                            "width": 880,
+                            "height": 550,
+                            "symbol": "NASDAQ:AAPL",
+                            "interval": "D",
+                            "timezone": "Etc/UTC",
+                            "theme": "dark",
+                            "style": "1",
+                            "locale": "en",
+                            "toolbar_bg": "#f1f3f6",
+                            "enable_publishing": false,
+                            "hide_side_toolbar": false,
+                            "allow_symbol_change": true,
+                            "details": true,
+                            "container_id": "tradingview_773e5"
+                        }
+                    );
+                </script>
+            </div>
+        </div>
+    </div>
 
-<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <!-- TradingView Widget END -->
+    @{
+        var user_em = await UserManager.GetUserAsync(User);
 
-<script src="js/index.js"></script>
+    }
+
+    @Html.Hidden("myvar", user_em.Email)
+
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+
+    <script src="js/index.js"></script>
 </body>
 </html>
 
@@ -123,61 +128,77 @@
     <script src="lib/jquery/dist/jquery.js"></script>
 
     <script type="text/javascript">
- $(function() {
+    $(function() {
         $('#btn_buy_stock_real_test').click(function() {
             var builder = {
                 stock_symbol: $('#fname').val(),
                 quantity: $('#lname').val(),
-                price: $('#pname').val()
+                price: $('#pname').val(),
+                email: $('#myvar').val()
             };
             $.ajax({
                 type: 'POST',
                 data: builder,
                 url: '@Url.Action("Buy_SI_Stocks_dispatcher", "Trading")',
-                success: function(data) {
-                    alert("The buy deal went though, wait for confirmation")
+                success: function(response) {
+                    alert("The filled stock, is sent to alpaca for handling")
+                    document.getElementById('formBuyRes').reset();
+                },
+                error: function(jqXHR) {
+                    alert('error; ' + jqXHR.status + 'Stock information was NOT sent!');
                 }
             });
         })
     });
-    document.getElementById("btn_buy_stock_real_test").addEventListener("click", function(event) {
-        event.preventDefault()
-    }); </script>
+    document.getElementById("btn_buy_stock_real_test").addEventListener("click",
+        function(event) {
+            event.preventDefault()
+        });
+    </script>
 
     <script type="text/javascript">
-        $('#alpaca_auth').click(function () {
+        $('#alpaca_auth').click(function() {
             var settings = {
                 "url": "https://app.alpaca.markets/oauth/authorize?response_type=code&client_id=594f6429f720875517565db7db39a584&redirect_uri=https://asetrader20200424150538.azurewebsites.net/Trading/TradingRecieverCode&state=8e02c9c6a3484fadaaf841fb1df290e1&scope=account:write%20trading",
                 "method": "GET",
                 "timeout": 0,
             };
             location.href = "https://app.alpaca.markets/oauth/authorize?response_type=code&client_id=594f6429f720875517565db7db39a584&redirect_uri=https://asetrader20200424150538.azurewebsites.net/Trading/TradingRecieverCode&state=8e02c9c6a3484fadaaf841fb1df290e1&scope=account:write%20trading";
-            $.ajax(settings).done(function (response) {
+            $.ajax(settings).done(function(response) {
                 console.log(response);
             });
-        });</script>
+        });
+    </script>
 
     <script type="text/javascript">
- $(function() {
-            $('#btn_sell_stock_real_test').click(function() {
-                var builder = {
-                    stock_symbol: $('#fname_sell').val(),
-                    quantity: $('#lname_sell').val(),
-                    price: $('#pname_sell').val()
-                };
-                $.ajax({
-                    type: 'POST',
-                    data: builder,
-                    url: '@Url.Action("Sell_SI_Stocks_dispatcher", "Trading")',
-                    success: function(data) {
-                        alert("The sell deal went though, wait for confirmation")
-                    }
-                });
-            })
-        });
-        document.getElementById("btn_sell_stock_real_test").addEventListener("click", function(event) {
+    $(function() {
+        $('#btn_sell_stock_real_test').click(function() {
+            var builder = {
+                stock_symbol: $('#fname_sell').val(),
+                quantity: $('#lname_sell').val(),
+                price: $('#pname_sell').val(),
+                email: $('#myvar').val()
+
+            };
+            $.ajax({
+                type: 'POST',
+                data: builder,
+                url: '@Url.Action("Sell_SI_Stocks_dispatcher", "Trading")',
+                success: function(data) {
+                    alert("The filled sell stock, is sent to alpaca for handling")
+                    document.getElementById('formSellRes').reset();
+                },
+                error: function (jqXHR) {
+                    alert('error; ' + jqXHR.status + 'Stock information was NOT sent!');
+                }
+            });
+        })
+    });
+    document.getElementById("btn_sell_stock_real_test").addEventListener("click",
+        function(event) {
             event.preventDefault()
-        }); </script>
+        });
+    </script>
 
 
 }
