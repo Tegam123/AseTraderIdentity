@@ -8,10 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using AseTrader.Data;
 using AseTrader.Models;
 using AseTrader.Models.EntityModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
 namespace AseTrader.Controllers
 {
+    [Authorize]
     public class FollowsController : Controller
     {
         private readonly ApplicationDbContext _context;

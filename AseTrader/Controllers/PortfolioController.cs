@@ -22,6 +22,7 @@ using RestSharp;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using AseTrader.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
 /// <summary>
@@ -29,7 +30,7 @@ using Microsoft.AspNetCore.Identity;
 /// </summary>
 namespace AseTrader.Controllers
 {
-
+    [Authorize]
     /// <summary>
     /// Class PortfolioController.
     /// Implements the <see cref="Microsoft.AspNetCore.Mvc.Controller" />

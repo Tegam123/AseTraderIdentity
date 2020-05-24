@@ -50,7 +50,7 @@ namespace AseTrader.Controllers.API
         
 
         [HttpGet("Test")]
-        public List<string> GetCustomer()
+        public List<string> Test()
         {
             return new List<string>(){ "Test","Test1"};
 

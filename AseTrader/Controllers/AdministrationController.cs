@@ -35,7 +35,7 @@ namespace AseTrader.Controllers
         [HttpGet]
         public IActionResult CreateRole()
         {
-            return View();
+            return View("CreateRole");
         }
 
         [ValidateAntiForgeryToken]

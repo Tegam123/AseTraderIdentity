@@ -33,7 +33,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace AseTrader.Controllers
 {
-
+    [Authorize]
     /// <summary>
     /// Class TradingController.
     /// Implements the <see cref="Microsoft.AspNetCore.Mvc.Controller" />
