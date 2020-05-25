@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using RestSharp;
 
 namespace Unit_test_sellstock
 {
-
     [TestFixture]
     public class sellstock_unit_test
     {
         private string accesstoken = "d8de6b5b-71c0-45e4-996d-83ba07cd28ec";
-
 
         [TestCase("WTS", 1, 420)]
         [TestCase("SPY", 2, 300)]
@@ -33,7 +26,6 @@ namespace Unit_test_sellstock
 
             IRestResponse restResponse = client.Execute(request);
             string response_string = restResponse.Content;
-
 
             //Assert
             if (!response_string.Contains("accepted"))
@@ -58,11 +50,9 @@ namespace Unit_test_sellstock
             IRestResponse restResponse = client.Execute(request);
             string response_string = restResponse.Content;
 
-
             //Assert
             if (!response_string.Contains("40010001"))
                 Assert.Fail("The stock was not sold, try again");
         }
-
     }
 }

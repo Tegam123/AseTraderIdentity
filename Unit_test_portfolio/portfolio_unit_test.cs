@@ -1,5 +1,4 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using RestSharp;
 
 namespace Unit_test_portfolio
@@ -20,7 +19,6 @@ namespace Unit_test_portfolio
             var client = new RestClient("https://paper-api.alpaca.markets/v2/positions");
             client.Timeout = -1;
 
-
             //act
             var request = new RestRequest(Method.GET);
             request.AddHeader("Authorization", $"Bearer {accesstoken}");
@@ -28,12 +26,10 @@ namespace Unit_test_portfolio
 
             string response_string = response.Content;
 
-
             //assert
             if (!response_string.Contains(symbol))
                 Assert.Fail("Retrived portfolio failed. Not the correct stocks");
         }
-
 
         [TestCase("TSL")]
         [TestCase("WHS")]
@@ -46,14 +42,12 @@ namespace Unit_test_portfolio
             var client = new RestClient("https://paper-api.alpaca.markets/v2/positions");
             client.Timeout = -1;
 
-
             //act
             var request = new RestRequest(Method.GET);
             request.AddHeader("Authorization", $"Bearer {accesstoken}");
             IRestResponse response = client.Execute(request);
 
             string response_string = response.Content;
-
 
             //assert
             if (!response_string.Contains(symbol))
