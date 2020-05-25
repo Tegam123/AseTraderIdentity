@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Alpaca.Markets;
+﻿using Alpaca.Markets;
 using AseTrader.Models.Alpaca_dependency;
 using RestSharp;
+using System.Threading.Tasks;
 using RestClient = RestSharp.RestClient;
 
 namespace AseTrader.Models.BuyStock
@@ -26,7 +23,6 @@ namespace AseTrader.Models.BuyStock
             request.AddHeader("Content-Type", "application/json");
             request.AddParameter("application/json", $"{{\r\n    \"symbol\": \"{sym}\", \r\n    \"qty\": {quantity},\r\n    \"side\": \"buy\",\r\n    \"type\": \"limit\",\r\n    \"time_in_force\": \"day\",\r\n    \"limit_price\": {price}\r\n}}", ParameterType.RequestBody);
             IRestResponse response = client.Execute(request);
-            //Console.WriteLine(response.Content);
         }
     }
 }

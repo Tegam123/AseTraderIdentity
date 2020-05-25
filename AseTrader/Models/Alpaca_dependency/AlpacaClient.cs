@@ -1,5 +1,4 @@
-﻿using System;
-using Alpaca.Markets;
+﻿using Alpaca.Markets;
 
 namespace AseTrader.Models.Alpaca_dependency
 {
@@ -15,19 +14,19 @@ namespace AseTrader.Models.Alpaca_dependency
 
         public AlpacaTradingClient AlpacaClientTrading()
         {
-            //_alpacaTradingClient = Environments.Paper.GetAlpacaTradingClient(new SecretKey(API_KEY,API_SECRET));
+            _alpacaTradingClient = Environments.Paper.GetAlpacaTradingClient(new SecretKey(API_KEY, API_SECRET));
             return _alpacaTradingClient;
         }
 
         public AlpacaDataClient AlpacaClientData()
         {
-            //_alpacaDataClient = Environments.Paper.GetAlpacaDataClient(new SecretKey(API_KEY,API_SECRET));
+            _alpacaDataClient = Environments.Paper.GetAlpacaDataClient(new SecretKey(API_KEY, API_SECRET));
             return _alpacaDataClient;
         }
 
         public AlpacaStreamingClient AlpacaClientStreaming()
         {
-            //_alpacaStreamingClient = Environments.Paper.GetAlpacaStreamingClient(new SecretKey(API_KEY, API_SECRET));
+            _alpacaStreamingClient = Environments.Paper.GetAlpacaStreamingClient(new SecretKey(API_KEY, API_SECRET));
             return _alpacaStreamingClient;
         }
     }

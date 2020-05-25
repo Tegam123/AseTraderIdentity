@@ -1,6 +1,6 @@
 ﻿// ***********************************************************************
 // Assembly         : AseTrader
-// Author           : Mikkel
+// Author           : Mikkel & Lena
 // Created          : 04-24-2020
 //
 // Last Modified By : Mikkel
@@ -11,39 +11,18 @@
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AseTrader.Models.Alpaca_dependency;
-using AseTrader.Models.Portfolio;
-using Microsoft.AspNetCore.Mvc;
-using RestSharp;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using AseTrader.Models;
+using AseTrader.Models.Portfolio;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
-/// <summary>
-/// The Controllers namespace.
-/// </summary>
 namespace AseTrader.Controllers
 {
     [Authorize]
-    /// <summary>
-    /// Class PortfolioController.
-    /// Implements the <see cref="Microsoft.AspNetCore.Mvc.Controller" />
-    /// </summary>
     public class PortfolioController : Controller
     {
-
-
-        /// <summary>
-        /// Indexes the specified user manager.
-        /// </summary>
-        /// <param name="userManager">The user manager.</param>
-        /// <returns>IActionResult.</returns>
         public async Task<IActionResult> Index([FromServices]UserManager<User> userManager)
         {
             var _user = await userManager.GetUserAsync(User);
@@ -52,7 +31,7 @@ namespace AseTrader.Controllers
 
             PortfolioMapper mapper = p.SeePortfolio();
 
-           return View(mapper);
+            return View(mapper);
         }
     }
 }
