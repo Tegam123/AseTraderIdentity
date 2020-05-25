@@ -7,11 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AseTrader", "AseTrader\AseT
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Administration.Controller.Test", "Administration.Controller.Test\Administration.Controller.Test.csproj", "{DE311653-BBF6-4183-AD4B-036B6BAD6327}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unit_test_sellstock", "..\..\..\..\OneDrive - Aarhus Universitet\Universitet\4. Semester\PRJ4\Trading-platform\Kode\Unit_test_sellstock\Unit_test_sellstock.csproj", "{DE47659D-CEB3-4AE8-8B04-DA4E98AB4609}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unit_test_buystock", "Unit_test_buystock\Unit_test_buystock.csproj", "{29692575-0143-4B3F-83DF-C842E6D32ED5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unit_test_portfolio", "..\..\..\..\OneDrive - Aarhus Universitet\Universitet\4. Semester\PRJ4\Trading-platform\Kode\Unit_test_portfolio\Unit_test_portfolio.csproj", "{A2E92F70-E519-4D27-9859-AAD38BE7F421}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unit_test_portfolio", "Unit_test_portfolio\Unit_test_portfolio.csproj", "{586C523E-AEA9-4663-8491-EFD32C6E5CB6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unit_test_buystock", "..\..\..\..\OneDrive - Aarhus Universitet\Universitet\4. Semester\PRJ4\Trading-platform\Kode\Unit_test_buystock\Unit_test_buystock.csproj", "{444859AA-14D0-4711-8A2F-FD366D3490DB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unit_test_sellstock", "Unit_test_sellstock\Unit_test_sellstock.csproj", "{7674F5FA-D223-4BF6-892C-990E3F2A11B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,18 +27,18 @@ Global
 		{DE311653-BBF6-4183-AD4B-036B6BAD6327}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE311653-BBF6-4183-AD4B-036B6BAD6327}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE311653-BBF6-4183-AD4B-036B6BAD6327}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DE47659D-CEB3-4AE8-8B04-DA4E98AB4609}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DE47659D-CEB3-4AE8-8B04-DA4E98AB4609}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DE47659D-CEB3-4AE8-8B04-DA4E98AB4609}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DE47659D-CEB3-4AE8-8B04-DA4E98AB4609}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A2E92F70-E519-4D27-9859-AAD38BE7F421}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A2E92F70-E519-4D27-9859-AAD38BE7F421}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A2E92F70-E519-4D27-9859-AAD38BE7F421}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A2E92F70-E519-4D27-9859-AAD38BE7F421}.Release|Any CPU.Build.0 = Release|Any CPU
-		{444859AA-14D0-4711-8A2F-FD366D3490DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{444859AA-14D0-4711-8A2F-FD366D3490DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{444859AA-14D0-4711-8A2F-FD366D3490DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{444859AA-14D0-4711-8A2F-FD366D3490DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29692575-0143-4B3F-83DF-C842E6D32ED5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29692575-0143-4B3F-83DF-C842E6D32ED5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29692575-0143-4B3F-83DF-C842E6D32ED5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29692575-0143-4B3F-83DF-C842E6D32ED5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{586C523E-AEA9-4663-8491-EFD32C6E5CB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{586C523E-AEA9-4663-8491-EFD32C6E5CB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{586C523E-AEA9-4663-8491-EFD32C6E5CB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{586C523E-AEA9-4663-8491-EFD32C6E5CB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7674F5FA-D223-4BF6-892C-990E3F2A11B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7674F5FA-D223-4BF6-892C-990E3F2A11B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7674F5FA-D223-4BF6-892C-990E3F2A11B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7674F5FA-D223-4BF6-892C-990E3F2A11B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
