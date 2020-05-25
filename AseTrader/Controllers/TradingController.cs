@@ -98,7 +98,7 @@ namespace AseTrader.Controllers
         {
             var containsInt = builder.stock_symbol.Any(char.IsDigit);
 
-            if (builder.stock_symbol is string && builder.quantity is int && builder.price is decimal && containsInt == false && builder.quantity != 0 && builder.price != 0)
+            if (builder.stock_symbol is string && builder.stock_symbol == builder.stock_symbol.ToUpper() && builder.quantity is int && builder.price is decimal && containsInt == false && builder.quantity != 0 && builder.price != 0)
             {
                 Buy_SI_Stocks(builder.stock_symbol, builder.quantity, builder.price, builder.email);
                 return Ok();
@@ -126,7 +126,7 @@ namespace AseTrader.Controllers
         {
             var containsInt = builder.stock_symbol.Any(char.IsDigit);
 
-            if (builder.stock_symbol is string && builder.quantity is int && builder.price is decimal && containsInt == false && builder.quantity != 0 && builder.price != 0)
+            if (builder.stock_symbol is string && builder.stock_symbol == builder.stock_symbol.ToUpper() && builder.quantity is int && builder.price is decimal && containsInt == false && builder.quantity != 0 && builder.price != 0)
             {
                 Sell_SI_Stocks(builder.stock_symbol, builder.quantity, builder.price, builder.email);
                 return Ok();
